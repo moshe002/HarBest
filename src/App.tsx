@@ -1,14 +1,18 @@
+import { BrowserRouter } from 'react-router-dom';
+
 import Header from "./Components/Header"
-import Login from "./Pages/Login"
-//import Signup from "./Pages/Signup"
+
+import Router from './Routes/Router';
 
 function App() {
 
   return (
-    <div className="flex flex-col h-screen w-full">
-      <Header />
-      <Login />    
-    </div>
+    <BrowserRouter>
+        <div className="flex flex-col h-screen w-full">
+          <Header />
+          <Router />
+        </div>
+    </BrowserRouter>
   )
 }
 

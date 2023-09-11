@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 
-import { AiOutlineEyeInvisible } from 'react-icons/ai'
-import { AiOutlineEye } from 'react-icons/ai'
-
+import ShowPasswordButton from '../Components/ShowPasswordButton'
 import BackButtons from '../Components/BackButton'
 
 function Signup() {
@@ -47,21 +45,11 @@ function Signup() {
                   { 
                     showPass 
                     && 
-                    <button 
-                      className='text-center mt-1 w-auto text-2xl p-1 bg-gray-400 text-white rounded-md'
-                      type='button' 
-                      title='show password'
-                      onClick={() => {
-                        if(checker == false) {
-                          setChangeType('text')
-                          setChecker(true)
-                        } else {
-                          setChangeType('password')
-                          setChecker(false)
-                        }
-                      }}>
-                        { changeType == 'text' ? <AiOutlineEyeInvisible /> : <AiOutlineEye />  }
-                      </button> 
+                    <ShowPasswordButton 
+                      checker={checker}
+                      changeType={changeType}
+                      setChecker={setChecker}
+                      setChangeType={setChangeType} />
                   }
             </div>
             <input 
@@ -70,7 +58,7 @@ function Signup() {
               value="SIGNUP"/>
         </form>
         <br />
-        <BackButtons buttonText={'Back to login'} />
+        <BackButtons buttonText={'Back to Login'} />
     </div>
   )
 }
