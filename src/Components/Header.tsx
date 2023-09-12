@@ -1,4 +1,6 @@
-import React from 'react'
+
+// check if session exists
+// if session exists, display logout button in header
 
 function Header() {
   return (
