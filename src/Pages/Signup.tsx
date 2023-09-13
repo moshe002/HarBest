@@ -4,12 +4,18 @@ import { supabase } from '../supabase-config'
 import Header from '../Components/Header'
 import ShowPasswordButton from '../Components/ShowPasswordButton'
 import BackButtons from '../Components/BackButton'
+import UserSignedIn from '../Components/UserSignedIn'
+import PasswordChecker from '../Components/PasswordChecker'
 
 function Signup() {
 
   const [showPass, setShowPass] = useState<boolean>(false)
   const [changeType, setChangeType] = useState<string>('password')
   const [checker, setChecker] = useState<boolean>(false)
+  const [userSignedIn, setUserSignedIn] = useState<boolean>(false)
+  const [passwordText, setPasswordText] = useState<string>('Password must be equal to or greater than 6 characters.')
+  const [passwordChecker, setPasswordChecker] = useState<boolean>(false)
+  const [passwordColor, setPasswordColor] = useState<string>('')
 
   const handleSubmit = async (e:React.FormEvent) => {
     e.preventDefault()
@@ -23,18 +29,27 @@ function Signup() {
       console.log(error)
     }
     if(data){
-      console.log(data)
+      //console.log(data)
+      setUserSignedIn(true)
     }
-    console.log('test')
   }
 
   const handleChangeInput = (e:React.SyntheticEvent) => {
     let inputText = e.target.value
     inputText.length == 0 ? setShowPass(false) : setShowPass(true)
+    if(inputText.length < 6) {
+      setPasswordChecker(true)
+      setPasswordText('Password too short!')
+      setPasswordColor('text-red-500')
+    } else {
+      setPasswordText('Password length is good.')
+      setPasswordColor('text-green-500')
+    }
   }
 
   return (
     <>
+      { userSignedIn && <UserSignedIn /> }  
       <Header />
       <div className='flex flex-col items-center justify-center h-screen'>
           <h1 className='text-2xl font-semibold'>Signup here</h1>
@@ -43,7 +58,7 @@ function Signup() {
           <div className='flex flex-col text-center'>
                   <label className='text-2xl font-semibold' htmlFor="email">Email:</label>
                   <input 
-                      className='outline-none p-1 text-center border-2 border-gray-300 focus:border-green-500 rounded-md duration-150' 
+                      className='w-full outline-none p-1 text-center border-2 border-gray-300 focus:border-green-500 rounded-md duration-150' 
                       name='email' 
                       title='email'
                       type="email" 
@@ -52,12 +67,18 @@ function Signup() {
               <div className='flex flex-col items-center text-center'>
                   <label className='text-2xl font-semibold' htmlFor="password">Password:</label>
                   <input 
-                    className='outline-none p-1 text-center border-2 border-gray-300 focus:border-green-500 rounded-md duration-150'
+                    className='w-full outline-none p-1 text-center border-2 border-gray-300 focus:border-green-500 rounded-md duration-150'
                     name='password' 
                     title='password' 
                     type={changeType} 
                     onChange={handleChangeInput}
                     required />
+                    { passwordChecker 
+                      && 
+                      <PasswordChecker 
+                        passwordText={passwordText}
+                        passwordColor={passwordColor} /> 
+                    } 
                     { 
                       showPass 
                       && 

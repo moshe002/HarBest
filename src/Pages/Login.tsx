@@ -4,6 +4,8 @@ import { supabase } from '../supabase-config';
 
 import Header from '../Components/Header';
 import ShowPasswordButton from '../Components/ShowPasswordButton'
+import PasswordChecker from '../Components/PasswordChecker';
+import InvalidUser from '../Components/InvalidUser';
 
 function Login() {
 
@@ -12,10 +14,23 @@ function Login() {
   const [showPass, setShowPass] = useState<boolean>(false)
   const [changeType, setChangeType] = useState<string>('password')
   const [checker, setChecker] = useState<boolean>(false)
+  const [passwordText, setPasswordText] = useState<string>('Password must be equal to or greater than 6 characters.')
+  const [passwordChecker, setPasswordChecker] = useState<boolean>(false)
+  const [passwordColor, setPasswordColor] = useState<string>('')
+  const [checkUser, setCheckUser] = useState<boolean>(false)
 
   const handleChangeInput = (e:React.SyntheticEvent) => {
     let inputText = e.target.value
     inputText.length == 0 ? setShowPass(false) : setShowPass(true)
+    if(inputText.length < 6) {
+      setPasswordChecker(true)
+      setPasswordText('Password too short!')
+      setPasswordColor('text-red-500')
+      setCheckUser(false)
+    } else {
+      setPasswordText('Password length is good.')
+      setPasswordColor('text-green-500')
+    }
   }
 
   const handleLogin = async (e:React.FormEvent) => {
@@ -26,14 +41,15 @@ function Login() {
     })
     let checker:boolean = false
     if(data){
-      console.log(data)
+      //console.log(data)
       checker = true
     }
     if(error){
       console.error(error)
       checker = false
+      setCheckUser(true)
     }
-    console.log('form submitted')
+    //console.log('form submitted')
     if(checker){
       navigate('/homepage')
     }
@@ -43,6 +59,8 @@ function Login() {
     <>
       <Header />
       <div className='flex flex-col items-center justify-center h-screen'>
+          { checkUser && <InvalidUser /> }
+          <br />
           <form onSubmit={handleLogin} className='flex flex-col gap-5 border-2 p-5 rounded-md'>
               <div className='flex flex-col text-center'>
                   <label className='text-2xl font-semibold' htmlFor="email">Email:</label>
@@ -64,6 +82,13 @@ function Login() {
                       //maxLength={8}
                       //minLength={8}
                       required />
+                    {
+                      passwordChecker
+                      &&
+                      <PasswordChecker 
+                        passwordText={passwordText}
+                        passwordColor={passwordColor} />
+                    }
                     { 
                       showPass 
                       && 
