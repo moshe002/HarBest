@@ -21,9 +21,15 @@ function Signup() {
     e.preventDefault()
     let email:string = e.target.email.value
     let password:string = e.target.password.value 
+    let username:string = e.target.username.value
     const { data, error } = await supabase.auth.signUp({
       email: email,
-      password: password
+      password: password,
+      options: {
+        data: {
+          username: username,
+        }
+      }
     })
     if(error){
       console.log(error)
@@ -51,48 +57,60 @@ function Signup() {
     <>
       { userSignedIn && <UserSignedIn /> }  
       <Header />
-      <div className='flex flex-col items-center justify-center h-screen'>
+      <div className='flex flex-col items-center justify-center p-3 h-screen'>
           <h1 className='text-2xl font-semibold'>Signup here</h1>
           <br />
           <form onSubmit={handleSubmit} className='flex flex-col gap-5 border-2 p-5 rounded-md' action="">
-          <div className='flex flex-col text-center'>
-                  <label className='text-2xl font-semibold' htmlFor="email">Email:</label>
-                  <input 
-                      className='w-full outline-none p-1 text-center border-2 border-gray-300 focus:border-green-500 rounded-md duration-150' 
-                      name='email' 
-                      title='email'
-                      type="email" 
-                      required />
-              </div>
-              <div className='flex flex-col items-center text-center'>
-                  <label className='text-2xl font-semibold' htmlFor="password">Password:</label>
-                  <input 
-                    className='w-full outline-none p-1 text-center border-2 border-gray-300 focus:border-green-500 rounded-md duration-150'
-                    name='password' 
-                    title='password' 
-                    type={changeType} 
-                    onChange={handleChangeInput}
-                    required />
-                    { passwordChecker 
-                      && 
-                      <PasswordChecker 
-                        passwordText={passwordText}
-                        passwordColor={passwordColor} /> 
-                    } 
-                    { 
-                      showPass 
-                      && 
-                      <ShowPasswordButton 
-                        checker={checker}
-                        changeType={changeType}
-                        setChecker={setChecker}
-                        setChangeType={setChangeType} />
-                    }
-              </div>
+            <div className='flex flex-col text-center'>
+              <label className='text-2xl font-semibold' htmlFor="email">Email:</label>
               <input 
-                className='bg-green-300 hover:bg-green-500 text-white font-semibold cursor-pointer p-2 rounded-md duration-150' 
-                type="submit" 
-                value="SIGNUP"/>
+                  className='w-full outline-none p-1 text-center border-2 border-gray-300 focus:border-green-500 rounded-md duration-150' 
+                  name='email' 
+                  id='email'
+                  title='email'
+                  type="email" 
+                  required />
+            </div>
+            <div className='flex flex-col text-center'>
+              <label className='text-2xl font-semibold' htmlFor="username">Username:</label>
+              <input 
+                  className='w-full outline-none p-1 text-center border-2 border-gray-300 focus:border-green-500 rounded-md duration-150' 
+                  name='username' 
+                  id='username'
+                  title='username'
+                  type="text" 
+                  required />
+            </div>
+            <div className='flex flex-col items-center text-center'>
+              <label className='text-2xl font-semibold' htmlFor="password">Password:</label>
+              <input 
+                className='w-full outline-none p-1 text-center border-2 border-gray-300 focus:border-green-500 rounded-md duration-150'
+                name='password'
+                id='password'
+                title='password' 
+                type={changeType} 
+                onChange={handleChangeInput}
+                required />
+                { passwordChecker 
+                  && 
+                  <PasswordChecker 
+                    passwordText={passwordText}
+                    passwordColor={passwordColor} /> 
+                } 
+                { 
+                  showPass 
+                  && 
+                  <ShowPasswordButton 
+                    checker={checker}
+                    changeType={changeType}
+                    setChecker={setChecker}
+                    setChangeType={setChangeType} />
+                }
+            </div>
+            <input 
+              className='bg-green-300 hover:bg-green-500 text-white font-semibold cursor-pointer p-2 rounded-md duration-150' 
+              type="submit" 
+              value="SIGNUP"/>
           </form>
           <br />
           <BackButtons buttonText={'Back to Login'} />

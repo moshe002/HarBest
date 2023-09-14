@@ -67,6 +67,7 @@ function Login() {
                   <input 
                       className='outline-none p-1 text-center border-2 border-gray-300 focus:border-green-500 rounded-md duration-150' 
                       name='email' 
+                      id='email'
                       title='email' 
                       type="email" 
                       required />
@@ -76,6 +77,7 @@ function Login() {
                   <input 
                       className='outline-none p-1 text-center border-2 border-gray-300 focus:border-green-500 rounded-md duration-150'
                       name='password' 
+                      id='password'
                       title='password' 
                       type={changeType} 
                       onChange={handleChangeInput}
