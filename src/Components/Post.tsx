@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
+import { supabase } from '../supabase-config';
 
 interface PostProps {
     setPost: React.Dispatch<React.SetStateAction<boolean>>;
@@ -7,8 +8,27 @@ interface PostProps {
 
 const Post:React.FC<PostProps> = ({ setPost }) => {
 
-    const handlePost = () => {
+    const [caption, setCaption] = useState<string>('')
+    const [nameOfSeller, setNameOfSeller] = useState<string>('')
+    const [emailOfSeller, setEmailOfSeller] = useState<string>('')
+    const [location, setLocation] = useState<string>('')
+    const [price, setPrice] = useState<number>(0)
 
+    const handlePost = async (e:React.SyntheticEvent) => {
+        e.preventDefault()
+        //console.log(price)
+        // caption, image, nameOfSeller, emailOfSeller, location, price
+        const { error } = await supabase
+        .from('posts')
+        .insert({ 
+            caption: caption, 
+            nameOfSeller: nameOfSeller,
+            emailOfSeller: emailOfSeller,
+            location: location,
+            price: price
+        })
+        error && console.error(error) // prints the error
+        console.log('submitted successfully')
     }
 
   return (
@@ -32,6 +52,8 @@ const Post:React.FC<PostProps> = ({ setPost }) => {
                         id="caption" 
                         cols={50} 
                         rows={3}
+                        value={caption}
+                        onChange={(e) => { setCaption(e.target.value) }}
                         required>
                     </textarea>
                 </div>
@@ -47,19 +69,51 @@ const Post:React.FC<PostProps> = ({ setPost }) => {
                 </div>
                 <div className='flex flex-col items-center'>
                     <label htmlFor="seller">Name of Seller:</label>
-                    <input className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' placeholder='John Doe' type="text" name='seller' id='seller' required />
+                    <input 
+                        className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' 
+                        placeholder='John Doe' 
+                        type="text" 
+                        name='seller' 
+                        id='seller' 
+                        value={nameOfSeller}
+                        onChange={(e) => { setNameOfSeller(e.target.value) }}
+                        required />
                 </div>
                 <div className='flex flex-col items-center'>
                     <label htmlFor="email">Email of Seller:</label>
-                    <input className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' placeholder='john@gmail.com' type="email" name='email' id='email' required />
+                    <input 
+                        className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' 
+                        placeholder='john@gmail.com' 
+                        type="email" 
+                        name='email' 
+                        id='email' 
+                        value={emailOfSeller}
+                        onChange={(e) => { setEmailOfSeller(e.target.value) }}
+                        required />
                 </div>
                 <div className='flex flex-col items-center'>
                     <label htmlFor="location">Location:</label>
-                    <input className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' placeholder='Cebu City' type="text" name='location' id='location' required />
+                    <input 
+                        className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' 
+                        placeholder='Cebu City' 
+                        type="text" 
+                        name='location' 
+                        id='location' 
+                        value={location}
+                        onChange={(e) => { setLocation(e.target.value) }}
+                        required />
                 </div>
                 <div className='flex flex-col items-center'>
                     <label htmlFor="price">Price:</label>
-                    <input className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' placeholder='10000' type="number" name='price' id='price' required />
+                    <input 
+                        className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' 
+                        placeholder='10000' 
+                        type="number" 
+                        name='price' 
+                        id='price' 
+                        value={price}
+                        onChange={(e:React.SyntheticEvent) => { setPrice(e.target.value) }}
+                        required />
                 </div>
                 <button
                     className='font-semibold p-3 rounded-md bg-green-400 hover:bg-green-600 text-white duration-150' 
