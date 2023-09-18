@@ -4,11 +4,21 @@ import { VscAccount } from 'react-icons/vsc'
 
 import BackButton from '../Components/BackButton'
 
+interface PostProps {
+  caption: string;
+  emailOfSeller: string;
+  location: string;
+  nameOfSeller: string;
+  price: number;
+}
+
 function Account() {
 
   const [username, setUsername] = useState<string>('')
   const [email, setEmail] = useState<string>()
   const [loading, setLoading] = useState<boolean>(false)
+
+  const [getUserPosts, setGetUserPosts] = useState<PostProps[]>([])
 
   useEffect(() => {
     getUserData()
@@ -16,33 +26,76 @@ function Account() {
 
   const getUserData = async () => {
     setLoading(true)
-    const { data: { user } } = await supabase.auth.getUser()
-    setUsername(user?.user_metadata.username)
-    setEmail(user?.email)
+    await userDetails()
     setLoading(false)
   } 
 
+  const userDetails = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    setUsername(user?.user_metadata.username)
+    setEmail(user?.email)
+    let username:string = user?.user_metadata.username
+    await userPosts(username)
+  }
+
+  const userPosts = async (username:string) => {
+    const { data, error } = await supabase
+    .from('posts')
+    .select()
+    .eq('nameOfSeller', username)
+    if(data){
+      //console.log(data)
+      setGetUserPosts(data)
+    } 
+    error && console.log(error) 
+  }
+
   return (
-    <div className='flex flex-col items-center justify-evenly h-screen w-full p-3'>
-      <div className='flex flex-col items-center'>
+    <div className='flex flex-col gap-3 p-3 items-center h-screen w-full overflow-auto'>
+      <div className='flex flex-col gap-3 items-center p-3'>
         <h1 className='text-7xl'><VscAccount /></h1>
         {
           loading
           ?
-            <h1 className='mt-3 text-xl font-bold'>Loading...</h1>
+            <h1 className='mt-3 text-3xl text-gray-400 font-bold'>Wait a minute...</h1>
           :
           <>
-            <h1 className='text-3xl'>{username}</h1>
-            <h1 className='text-3xl'>{email}</h1>
+            <div className='text-center'>
+              <p className='text-sm text-green-500 font-semibold'>username</p>
+              <h1 className='text-3xl'>{username}</h1>
+            </div>
+            <div className='text-center'>
+              <p className='text-sm text-green-500 font-semibold'>email</p>
+              <h1 className='text-3xl'>{email}</h1>
+            </div>
           </>
         }
       </div>
-      <div className='p-3 border-2 rounded-md'>
-        <h1 className='text-xl font-semibold'>Posts:</h1>
-      </div>
-      <div>
-        <BackButton buttonText='Back to homepage' />
-      </div>
+      { 
+        loading 
+        ? 
+        <h1 className='mt-3 text-3xl text-gray-400 font-bold'>Fetching posts...</h1>
+        : 
+        <div className='flex flex-col gap-3 p-3 rounded-md'>
+          <h1 className='text-xl font-semibold underline'>Posts you made:</h1>
+          {
+            getUserPosts.map((data, index) => {
+              return(
+                <div
+                  className='flex flex-col items-center gap-3 text-center shadow-xl border-2 p-5 rounded-md'  
+                  key={index}>
+                    <h1 className='font-semibold'>{data.nameOfSeller}</h1>
+                    <h1 className='text-base'>{data.caption}</h1>
+                    <img src="" alt="image_of_item" />
+                    <h1 className='font-bold'>Location: <i className='text-gray-400'>{data.location}</i></h1>
+                    <h1 className='font-bold'>Price: <i className='text-gray-400'>{data.price}</i></h1>
+                </div>
+              )
+            })
+          }
+        </div>
+      }
+      <BackButton buttonText='Back to homepage' />
     </div>
   )
 }

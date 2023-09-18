@@ -6,16 +6,12 @@ import Post from './Post'
 function PostButton() {
 
   const [post, setPost] = useState<boolean>(false)
-
-  const handlePost = () => {
-    setPost(true)
-  }
   
   return (
     <>
       { post && <Post setPost={setPost} /> }
       <button
-        onClick={handlePost}
+        onClick={() => setPost(true)}
         title='post your product'
         className='text-white font-bold bg-green-500 hover:bg-green-600 p-3 rounded-md duration-150' 
         type='button'>
