@@ -20,6 +20,7 @@ function Search() {
                 type="search" 
                 name='searchInput'
                 placeholder='Search for produce' 
+                required
                 //onChange={handleInput}
             />
             <button 

@@ -3,12 +3,14 @@ import { supabase } from '../supabase-config'
 import { VscAccount } from 'react-icons/vsc'
 
 import BackButton from '../Components/BackButton'
+import DeletePost from '../Components/DeletePost'
+import EditPost from '../Components/EditPost'
 
 interface PostProps {
   caption: string;
   emailOfSeller: string;
-  location: string;
   nameOfSeller: string;
+  location: string;
   price: number;
 }
 
@@ -45,7 +47,7 @@ function Account() {
     .eq('nameOfSeller', username)
     if(data){
       //console.log(data)
-      setGetUserPosts(data)
+      setGetUserPosts(data.reverse())
     } 
     error && console.log(error) 
   }
@@ -57,7 +59,7 @@ function Account() {
         {
           loading
           ?
-            <h1 className='mt-3 text-3xl text-gray-400 font-bold'>Wait a minute...</h1>
+            <h1 className='mt-3 text-3xl text-gray-400 font-bold'>Fetching data...</h1>
           :
           <>
             <div className='text-center'>
@@ -74,22 +76,28 @@ function Account() {
       { 
         loading 
         ? 
-        <h1 className='mt-3 text-3xl text-gray-400 font-bold'>Fetching posts...</h1>
+        <h1 className='mt-3 text-3xl text-gray-400 font-bold'>Wait a minute...</h1>
         : 
-        <div className='flex flex-col gap-3 p-3 rounded-md'>
+        <div className='flex flex-col gap-3 p-3 rounded-md items-center'>
           <h1 className='text-xl font-semibold underline'>Posts you made:</h1>
           {
             getUserPosts.map((data, index) => {
               return(
-                <div
-                  className='flex flex-col items-center gap-3 text-center shadow-xl border-2 p-5 rounded-md'  
-                  key={index}>
-                    <h1 className='font-semibold'>{data.nameOfSeller}</h1>
-                    <h1 className='text-base'>{data.caption}</h1>
-                    <img src="" alt="image_of_item" />
-                    <h1 className='font-bold'>Location: <i className='text-gray-400'>{data.location}</i></h1>
-                    <h1 className='font-bold'>Price: <i className='text-gray-400'>{data.price}</i></h1>
+                <div className='flex flex-row gap-1 justify-center' key={index}>
+                  <div
+                    className='flex flex-col items-center gap-3 text-center shadow-xl border-2 border-gray-400 p-5 rounded-md'>
+                      <h1 className='font-semibold'>{data.nameOfSeller}</h1>
+                      <h1 className='text-base'>{data.caption}</h1>
+                      <img src="" alt="image_of_item" />
+                      <h1 className='font-bold'>Location: <i className='text-gray-400'>{data.location}</i></h1>
+                      <h1 className='font-bold'>Price: <i className='text-gray-400'>{data.price}</i></h1>
+                  </div>
+                  <div className='flex flex-col gap-2 justify-center'>
+                    <DeletePost index={index} />
+                    <EditPost />
+                  </div>
                 </div>
+                
               )
             })
           }

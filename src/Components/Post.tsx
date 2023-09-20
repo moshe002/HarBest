@@ -11,8 +11,6 @@ interface PostProps {
 const Post:React.FC<PostProps> = ({ setPost }) => {
 
     const [caption, setCaption] = useState<string>('')
-    const [nameOfSeller, setNameOfSeller] = useState<string>('')
-    const [emailOfSeller, setEmailOfSeller] = useState<string>('')
     const [location, setLocation] = useState<string>('')
     const [price, setPrice] = useState<number>(0)
 
@@ -20,14 +18,22 @@ const Post:React.FC<PostProps> = ({ setPost }) => {
 
     const handlePost = async (e:React.SyntheticEvent) => {
         e.preventDefault()
-        //console.log(price)
-        // caption, image, nameOfSeller, emailOfSeller, location, price
+        // caption, image, location, price
+        const { data: { user } } = await supabase.auth.getUser()
+        //console.log(user?.user_metadata.username)
+        //console.log(user?.email)
+        let username:string = user?.user_metadata.username
+        let email:string | undefined = user?.email
+        await postItems(username, email)
+    }
+
+    const postItems = async (username:string, email: string | undefined ) => {
         const { error } = await supabase
         .from('posts')
         .insert({ 
             caption: caption, 
-            nameOfSeller: nameOfSeller,
-            emailOfSeller: emailOfSeller,
+            nameOfSeller: username,
+            emailOfSeller: email,
             location: location,
             price: price
         })
@@ -77,30 +83,6 @@ const Post:React.FC<PostProps> = ({ setPost }) => {
                                     accept='.jpg, .jpeg, .png, .gif' 
                                     name="image" 
                                     id="image" 
-                                    required />
-                            </div>
-                            <div className='flex flex-col items-center'>
-                                <label htmlFor="seller">Your Username:</label>
-                                <input 
-                                    className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' 
-                                    placeholder='John Doe' 
-                                    type="text" 
-                                    name='seller' 
-                                    id='seller' 
-                                    value={nameOfSeller}
-                                    onChange={(e) => { setNameOfSeller(e.target.value) }}
-                                    required />
-                            </div>
-                            <div className='flex flex-col items-center'>
-                                <label htmlFor="email">Your Email:</label>
-                                <input 
-                                    className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' 
-                                    placeholder='john@gmail.com' 
-                                    type="email" 
-                                    name='email' 
-                                    id='email' 
-                                    value={emailOfSeller}
-                                    onChange={(e) => { setEmailOfSeller(e.target.value) }}
                                     required />
                             </div>
                             <div className='flex flex-col items-center'>
