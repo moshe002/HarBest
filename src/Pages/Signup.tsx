@@ -58,7 +58,7 @@ function Signup() {
       { userSignedIn && <UserSignedIn /> }  
       <Header />
       <div className='flex flex-col items-center justify-center p-3 h-screen'>
-          <h1 className='text-2xl font-semibold'>Signup here</h1>
+          <h1 className='text-blue-500 text-2xl font-bold'>Signup here</h1>
           <br />
           <form onSubmit={handleSubmit} className='flex flex-col gap-5 border-2 p-5 rounded-md' action="">
             <div className='flex flex-col text-center'>

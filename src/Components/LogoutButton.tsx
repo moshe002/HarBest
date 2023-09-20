@@ -19,7 +19,7 @@ function LogoutButton() {
         } catch(error){
             console.error(error)
         }
-        console.log('user logged out')
+        //console.log('user logged out')
     }
 
   return (

@@ -39,7 +39,7 @@ function Feed() {
   return (
     <>
       <div className='flex flex-col gap-5 p-3 w-2/6 overflow-y-auto'>
-        { loading && <h1 className='text-center text-xl text-gray-400 mt-3 font-bold'>Loading...</h1> }
+        { loading && <h1 className='text-center text-3xl text-gray-400 mt-10 font-bold'>Loading...</h1> }
           {
             posts.map((data, index) => {
               return (

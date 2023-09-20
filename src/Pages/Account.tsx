@@ -12,6 +12,7 @@ interface PostProps {
   nameOfSeller: string;
   location: string;
   price: number;
+  id: string;
 }
 
 function Account() {
@@ -19,17 +20,18 @@ function Account() {
   const [username, setUsername] = useState<string>('')
   const [email, setEmail] = useState<string>()
   const [loading, setLoading] = useState<boolean>(false)
-
   const [getUserPosts, setGetUserPosts] = useState<PostProps[]>([])
+  const [checker, setChecker] = useState<boolean>(false)
 
   useEffect(() => {
     getUserData()
-  }, [])
+  }, [checker])
 
   const getUserData = async () => {
     setLoading(true)
     await userDetails()
     setLoading(false)
+    setChecker(false)
   } 
 
   const userDetails = async () => {
@@ -76,7 +78,7 @@ function Account() {
       { 
         loading 
         ? 
-        <h1 className='mt-3 text-3xl text-gray-400 font-bold'>Wait a minute...</h1>
+        <h1 className='mt-3 text-3xl text-gray-400 font-bold'>Patience is a virtue...</h1>
         : 
         <div className='flex flex-col gap-3 p-3 rounded-md items-center'>
           <h1 className='text-xl font-semibold underline'>Posts you made:</h1>
@@ -93,8 +95,8 @@ function Account() {
                       <h1 className='font-bold'>Price: <i className='text-gray-400'>{data.price}</i></h1>
                   </div>
                   <div className='flex flex-col gap-2 justify-center'>
-                    <DeletePost index={index} />
                     <EditPost />
+                    <DeletePost id={data.id} setChecker={setChecker} />
                   </div>
                 </div>
                 

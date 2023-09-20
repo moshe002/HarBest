@@ -38,7 +38,7 @@ const Post:React.FC<PostProps> = ({ setPost }) => {
             price: price
         })
         error && console.error(error) // prints the error
-        console.log('submitted successfully')
+        //console.log('submitted successfully')
         setSuccessPost(true)
     }
 
