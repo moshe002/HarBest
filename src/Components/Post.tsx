@@ -6,13 +6,16 @@ import SuccessPost from './SuccessPost'
 
 interface PostProps {
     setPost: React.Dispatch<React.SetStateAction<boolean>>;
+    setUpdatePost: React.Dispatch<React.SetStateAction<boolean>>;
+    //setImageName: React.Dispatch<React.SetStateAction<File | any>>;
 }
 
-const Post:React.FC<PostProps> = ({ setPost }) => {
+const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
 
     const [caption, setCaption] = useState<string>('')
     const [location, setLocation] = useState<string>('')
     const [price, setPrice] = useState<number>(0)
+    const [image, setImage] = useState<File | any>()
 
     const [successPost, setSuccessPost] = useState<boolean>(false)
 
@@ -24,10 +27,14 @@ const Post:React.FC<PostProps> = ({ setPost }) => {
         //console.log(user?.email)
         let username:string = user?.user_metadata.username
         let email:string | undefined = user?.email
+        //console.log('handlePost')
         await postItems(username, email)
+        setUpdatePost(true)
     }
 
     const postItems = async (username:string, email: string | undefined ) => {
+        //console.log('postItems')
+        await uploadImage(username)
         const { error } = await supabase
         .from('posts')
         .insert({ 
@@ -40,6 +47,22 @@ const Post:React.FC<PostProps> = ({ setPost }) => {
         error && console.error(error) // prints the error
         //console.log('submitted successfully')
         setSuccessPost(true)
+    }
+
+    const uploadImage = async (username:string) => {    
+        //console.log('uploadImage')  
+        const { data, error } = await supabase
+        .storage
+        .from('postImages')
+        .upload(`${username}/${image?.name}`, image, {
+            cacheControl: '3600',
+            upsert: false
+        })
+        if(data){
+            //console.log(data)
+            console.log('image uploaded')
+        }
+        error && console.error(error)
     }
 
   return (
@@ -79,10 +102,14 @@ const Post:React.FC<PostProps> = ({ setPost }) => {
                                 <label htmlFor="image">Image:</label>
                                 <input 
                                     className='outline-none focus:border-green-400' 
-                                    type="file" 
+                                    type="file"
                                     accept='.jpg, .jpeg, .png, .gif' 
                                     name="image" 
-                                    id="image" 
+                                    id="image"
+                                    onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
+                                        const fileImage = e.target.files?.[0]
+                                        setImage(fileImage)
+                                    }} 
                                     required />
                             </div>
                             <div className='flex flex-col items-center'>

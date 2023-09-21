@@ -3,13 +3,18 @@ import { HiOutlinePencilAlt } from 'react-icons/hi'
 
 import Post from './Post'
 
-function PostButton() {
+interface UpdatePostProps {
+  setUpdatePost: React.Dispatch<React.SetStateAction<boolean>>;
+  //setImageName: React.Dispatch<React.SetStateAction<File | any>>;
+}
+
+const PostButton:React.FC<UpdatePostProps> = ({ setUpdatePost }) => {
 
   const [post, setPost] = useState<boolean>(false)
   
   return (
     <>
-      { post && <Post setPost={setPost} /> }
+      { post && <Post setPost={setPost} setUpdatePost={setUpdatePost} /> }
       <button
         onClick={() => setPost(true)}
         title='post your product'

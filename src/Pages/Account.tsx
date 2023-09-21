@@ -65,12 +65,12 @@ function Account() {
           :
           <>
             <div className='text-center'>
-              <p className='text-sm text-green-500 font-semibold'>username</p>
               <h1 className='text-3xl'>{username}</h1>
+              <p className='text-sm text-green-500 font-semibold'>username</p>
             </div>
             <div className='text-center'>
-              <p className='text-sm text-green-500 font-semibold'>email</p>
               <h1 className='text-3xl'>{email}</h1>
+              <p className='text-sm text-green-500 font-semibold'>email</p>
             </div>
           </>
         }
