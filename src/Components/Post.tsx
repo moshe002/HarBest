@@ -15,19 +15,17 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
     const [caption, setCaption] = useState<string>('')
     const [location, setLocation] = useState<string>('')
     const [price, setPrice] = useState<number>(0)
+    const [imageUrl, setImageUrl] = useState<string>('')
     const [image, setImage] = useState<File | any>()
 
     const [successPost, setSuccessPost] = useState<boolean>(false)
 
     const handlePost = async (e:React.SyntheticEvent) => {
         e.preventDefault()
-        // caption, image, location, price
+        // caption, image, location, price, image url from storage
         const { data: { user } } = await supabase.auth.getUser()
-        //console.log(user?.user_metadata.username)
-        //console.log(user?.email)
         let username:string = user?.user_metadata.username
         let email:string | undefined = user?.email
-        //console.log('handlePost')
         await postItems(username, email)
         setUpdatePost(true)
     }
@@ -35,6 +33,7 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
     const postItems = async (username:string, email: string | undefined ) => {
         //console.log('postItems')
         await uploadImage(username)
+        const { data:publicURL } = supabase.storage.from('postImages').getPublicUrl(`${username}/${image.name}`)
         const { error } = await supabase
         .from('posts')
         .insert({ 
@@ -42,10 +41,10 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
             nameOfSeller: username,
             emailOfSeller: email,
             location: location,
-            price: price
+            price: price,
+            imgUrl: publicURL.publicUrl
         })
         error && console.error(error) // prints the error
-        //console.log('submitted successfully')
         setSuccessPost(true)
     }
 
@@ -61,9 +60,23 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
         if(data){
             //console.log(data)
             console.log('image uploaded')
+            //await getImageUrl(username)
+            //console.log(imageUrl)
         }
         error && console.error(error)
     }
+
+    // const getImageUrl = async (username:string) => {        
+    //     const { data } = await supabase
+    //     .storage
+    //     .from('postImages')
+    //     .getPublicUrl(`${username}/${image?.name}`)
+    //     if(data){
+    //         const publicImageUrl = data.publicUrl 
+    //         //console.log(publicImageUrl)
+    //         //setImageUrl(publicImageUrl)
+    //     }
+    // }
 
   return (
     <>
@@ -85,7 +98,7 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
                         </div>
                         <form className='flex flex-col items-center gap-3 p-3' onSubmit={handlePost}>
                             <div className='flex flex-col items-center'>
-                                <label htmlFor="caption">Caption:</label>
+                                <label className='font-semibold' htmlFor="caption">Caption:</label>
                                 <textarea 
                                     className='outline-none text-center border-2 p-1 rounded-md placeholder-gray-400 focus:border-green-400' 
                                     placeholder='Write your caption here...' 
@@ -99,7 +112,7 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
                                 </textarea>
                             </div>
                             <div className='flex flex-col items-center border-2 border-dashed p-3 rounded-md'>
-                                <label htmlFor="image">Image:</label>
+                                <label className='font-semibold' htmlFor="image">Image:</label>
                                 <input 
                                     className='outline-none focus:border-green-400' 
                                     type="file"
@@ -113,7 +126,7 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
                                     required />
                             </div>
                             <div className='flex flex-col items-center'>
-                                <label htmlFor="location">Location:</label>
+                                <label className='font-semibold' htmlFor="location">Location:</label>
                                 <input 
                                     className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' 
                                     placeholder='Cebu City' 
@@ -125,7 +138,7 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
                                     required />
                             </div>
                             <div className='flex flex-col items-center'>
-                                <label htmlFor="price">Price:</label>
+                                <label className='font-semibold' htmlFor="price">Price:</label>
                                 <input 
                                     className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' 
                                     placeholder='10000' 
@@ -133,7 +146,7 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
                                     name='price' 
                                     id='price' 
                                     value={price}
-                                    onChange={(e:React.SyntheticEvent) => { setPrice(e.target.value) }}
+                                    onChange={(e:any) => { setPrice(e.target.value) }}
                                     required />
                             </div>
                             <button

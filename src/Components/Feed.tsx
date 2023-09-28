@@ -9,6 +9,7 @@ interface PostProps {
   location: string;
   nameOfSeller: string;
   price: number;
+  imgUrl: string;
 }
 
 interface UpdatePostProps {
@@ -19,66 +20,40 @@ const Feed:React.FC<UpdatePostProps> = ({ updatePost }) => {
 
   const [posts, setPosts] = useState<PostProps[]>([])
   const [loading, setLoading] = useState<boolean>(true)
-  const [username, setUsername] = useState<string>('')
-  //const [imageUrl, setImageUrl] = useState<string>('')
-  const [filesInBucket, setFilesInBucket] = useState<any[]>([])
-  const [imgName, setImgName] = useState<string>('')
-
-  //console.log()
-  //console.log(imageName)
-  //console.log(username)
+  //const [imgData, setImgData] = useState<any[]>([])
 
   useEffect(() => {
     getAllPosts()
   }, [updatePost]) // so basically when 'updatePost' updates it also runs the useEffect
 
   const getAllPosts = async () => {  
-    getFilesInBucket()
-    await getUser()
     const { data, error } = await supabase.from('posts').select()
     if(data) {
       //console.log(data)
+      // data.forEach((val) => {
+      //   getFilesInBucket(val.nameOfSeller) // gives the function with the username as its parameter
+      // })
       setPosts(data.reverse())
     } 
     error && console.log(error)
     setLoading(false) 
   }
 
-  // const getImageUrl = () => { // gets the url of the image for src    
-  //   const { data } = supabase
+  // const getFilesInBucket = async (name:string) => {  
+  //   const { data, error } = await supabase
   //   .storage
   //   .from('postImages')
-  //   .getPublicUrl(`${username}/${imageName}`)
-  //   if(data) {
-  //     //console.log(data.publicUrl)
-  //     setImageUrl(data.publicUrl)
-  //   }
+  //   .list(name, {
+  //     limit: 100,
+  //     offset: 0,
+  //     sortBy: { column: 'name', order: 'asc' },
+  //   })
+  //   if(data){
+  //     //console.log(data)
+  //     setImgData(data)
+  //   } 
+  //   error && console.error(error)
   // }
-
-  const getFilesInBucket = async () => {  
-    //let folderName:string = `${username}/`  
-    const { data, error } = await supabase
-    .storage
-    .from('postImages')
-    .list(username, {
-      limit: 100,
-      offset: 0,
-      sortBy: { column: 'name', order: 'asc' },
-      //search: imageName // name of file here 
-    })
-    if(data){
-      //console.log(data)
-      setFilesInBucket(data)
-    } 
-    error && console.error(error)
-    setImgName(filesInBucket[0]?.name)
-  }
-
-  const getUser = async () => { // get username
-    const { data: { user } } = await supabase.auth.getUser()
-    let username:string = user?.user_metadata.username
-    setUsername(username)
-  }
 
   return (
     <>
@@ -92,9 +67,10 @@ const Feed:React.FC<UpdatePostProps> = ({ updatePost }) => {
                   key={index}>
                     <h1 className='font-semibold'>{data.nameOfSeller}</h1>
                     <h1 className='text-base'>{data.caption}</h1>
-                    <img 
-                      className='rounded-md'
-                      src={`https://gpuntfkmyoteglavnzsu.supabase.co/storage/v1/object/public/postImages/darlene/emptyMap.png`} 
+                    <img
+                      key={index} 
+                      className='rounded-md w-40 h-40'
+                      src={`${data.imgUrl}`} 
                       alt="image_of_item" />
                     <h1 className='font-bold'>Location: <i className='text-gray-400'>{data.location}</i></h1>
                     <h1 className='font-bold'>Price: <i className='text-gray-400'>{data.price}</i></h1>

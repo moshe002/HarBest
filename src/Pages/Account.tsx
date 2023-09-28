@@ -13,6 +13,7 @@ interface PostProps {
   location: string;
   price: number;
   id: string;
+  imgUrl: string;
 }
 
 function Account() {
@@ -85,18 +86,25 @@ function Account() {
           {
             getUserPosts.map((data, index) => {
               return(
-                <div className='flex flex-row gap-1 justify-center' key={index}>
+                <div className='flex flex-col gap-1 justify-center' key={index}>
                   <div
                     className='flex flex-col items-center gap-3 text-center shadow-xl border-2 border-gray-400 p-5 rounded-md'>
                       <h1 className='font-semibold'>{data.nameOfSeller}</h1>
                       <h1 className='text-base'>{data.caption}</h1>
-                      <img src="" alt="image_of_item" />
+                      <img className='rounded-md w-40 h-40' src={`${data.imgUrl}`} alt="image_of_item" />
                       <h1 className='font-bold'>Location: <i className='text-gray-400'>{data.location}</i></h1>
                       <h1 className='font-bold'>Price: <i className='text-gray-400'>{data.price}</i></h1>
                   </div>
-                  <div className='flex flex-col gap-2 justify-center'>
-                    <EditPost />
-                    <DeletePost id={data.id} setChecker={setChecker} />
+                  <div className='flex flex-row gap-2 justify-center items-center'>
+                    <EditPost
+                      id={data.id}
+                      name={data.nameOfSeller}
+                      caption={data.caption}
+                      imgUrl={data.imgUrl}
+                      location={data.location}
+                      price={data.price}
+                      setChecker={setChecker} />
+                    <DeletePost imgUrl={data.imgUrl} id={data.id} setChecker={setChecker} />
                   </div>
                 </div>
                 

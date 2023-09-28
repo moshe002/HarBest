@@ -5,9 +5,10 @@ import { supabase } from '../supabase-config'
 interface DeleteProps {
     id: string;
     setChecker: React.Dispatch<React.SetStateAction<boolean>>;
+    imgUrl: string;
 }
 
-const DeletePost:React.FC<DeleteProps> = ({ id, setChecker }) => {
+const DeletePost:React.FC<DeleteProps> = ({ id, setChecker, imgUrl }) => {
 
     const [postDelete, setPostDelete] = useState<boolean>(false)
     const [doneDelete, setDoneDelete] = useState<boolean>(false)
@@ -20,9 +21,19 @@ const DeletePost:React.FC<DeleteProps> = ({ id, setChecker }) => {
             .from('posts')
             .delete()
             .eq('id', id)
-
             error && console.error(error)
             //console.log('Post Deleted!')
+
+            const urlParts = `${imgUrl}`.split('/');
+            const shortenedUrl = urlParts.slice(-2).join('/');
+            //console.log(shortenedUrl); // thanks chatgpt
+
+            const { data, error:bucketError } = await supabase
+            .storage
+            .from('postImages')
+            .remove([`${shortenedUrl}`])
+            data && console.log('deleted') //console.log(data)
+            bucketError && console.error(bucketError)
         }
     }
 
