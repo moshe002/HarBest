@@ -73,50 +73,86 @@ const EditPostModal:React.FC<EditModalProps> = ({
 }) => {
 
   const [newCaption, setNewCaption] = useState<string>(caption)
-  const [newImgUrl, setNewImgUrl] = useState<string>('')
   const [imageDetails, setImageDetails] = useState<File | any>() // this can get image.name for file location
   const [newLocation, setNewLocation] = useState<string>(location)
   const [newPrice, setNewPrice] = useState<number>(price)
-  const [newPath, setNewPath] = useState<string>('')
 
   const submitEditPost = async (e:React.SyntheticEvent) => {
     e.preventDefault()
     const urlParts = imgUrl.split('/');
     const imageName = urlParts.pop();
-    await updateImage(imageName) // previous image name
-    //const { data:publicURL } = supabase.storage.from('postImages').getPublicUrl(`${name}/${imageDetails.name}`)
-    //console.log('new imageURL: ' + publicURL.publicUrl);
-    // if(id) {
-    //   console.log('inside if id')
-    //   const { error } = await supabase
-    //   .from('posts')
-    //   .update({ 
-    //     caption: newCaption,
-    //     location: newLocation,
-    //     price: newPrice,
-    //     imgUrl: publicURL.publicUrl //(new url most be here)
-    //   })
-    //   .eq('id', id)
-    //   error && console.error(error)
-    //   console.log('edit success')
-    // }
+
+    //await removeImage(imageName)
+
+    await uploadNewImage()
+
+    // get the url of the image
+    const { data:publicURL } = supabase.storage.from('postImages').getPublicUrl(`${name}/${imageDetails.name}`) // ${name}/${imageName}
+
+    await updatePost(publicURL.publicUrl) // updates the post
+
+    // handle modals
     setEditModal(false)
     setSuccessEdit(true)
   }
 
-  const updateImage = async (prevImage:string | undefined) => {
+  const updatePost = async (url: string) => {
+    if(id) {
+      const { error } = await supabase
+      .from('posts')
+      .update({ 
+        caption: newCaption,
+        location: newLocation,
+        price: newPrice,
+        imgUrl: url //imgUrl //publicURL.publicUrl //(new url most be here)
+      })
+      .eq('id', id)
+      error && console.error(error)
+    }
+    //console.log('edit done')
+  }
+
+  // const removeImage = async (prevImage: string | undefined) => {
+  //   const { data, error } = await supabase
+  //   .storage
+  //   .from('postImages')
+  //   .remove([`${name}/${prevImage}`])
+  //   if(data){
+  //     console.log("removed image: ", data)
+  //   }
+  //   error && console.error(error)
+  // }
+  
+  const uploadNewImage = async () => {
+    const { data, error } = await supabase
+      .storage
+      .from('postImages')
+      .upload(`${name}/${imageDetails.name}`, imageDetails, {
+        cacheControl: '3600',
+        upsert: false
+      })
+      if(data){
+        return
+        //console.log("updated image: ", data)
+      }
+      error && console.error(error)
+  }
+  
+
+  /*const updateImage = async (imageName:string | undefined) => {
     const { data, error } = await supabase
     .storage
     .from('postImages')
-    .update(`${name}/${prevImage}`, imageDetails, {
-      cacheControl: '3600',
+    .update(`${name}/${imageName}`, imageDetails, {
+      cacheControl: '300',
       upsert: true
     })
     if(data) {
-      console.log(data)
+      console.log("update image data: " , data)
+      //setNewPath(data.path)
     }
     error && console.error(error)
-  }
+  }*/
 
   return(
     <div className='fixed top-0 left-0 p-5 w-full h-screen flex justify-center items-center bg-gray-600 bg-opacity-50 z-40'>

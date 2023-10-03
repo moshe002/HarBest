@@ -107,7 +107,6 @@ function Account() {
                     <DeletePost imgUrl={data.imgUrl} id={data.id} setChecker={setChecker} />
                   </div>
                 </div>
-                
               )
             })
           }
