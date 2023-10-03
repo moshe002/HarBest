@@ -81,9 +81,11 @@ const EditPostModal:React.FC<EditModalProps> = ({
     e.preventDefault()
     const urlParts = imgUrl.split('/');
     const imageName = urlParts.pop();
+    //console.log(imageName)
 
     //await removeImage(imageName)
 
+    //await updateImage(imageName)
     await uploadNewImage()
 
     // get the url of the image
@@ -144,7 +146,7 @@ const EditPostModal:React.FC<EditModalProps> = ({
     .storage
     .from('postImages')
     .update(`${name}/${imageName}`, imageDetails, {
-      cacheControl: '300',
+      cacheControl: '0',
       upsert: true
     })
     if(data) {

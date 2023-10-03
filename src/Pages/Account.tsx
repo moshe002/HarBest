@@ -56,7 +56,10 @@ function Account() {
   }
 
   return (
-    <div className='flex flex-col gap-3 p-3 items-center h-screen w-full overflow-auto'>
+    <div className='flex flex-col relative gap-3 p-3 items-center h-screen w-full overflow-auto'>
+      <div className='fixed top-10 left-10'>
+        <BackButton buttonText='Back to homepage' />
+      </div>
       <div className='flex flex-col gap-3 items-center p-3'>
         <h1 className='text-7xl'><VscAccount /></h1>
         {
@@ -81,9 +84,18 @@ function Account() {
         ? 
         <h1 className='mt-3 text-3xl text-gray-400 font-bold'>Patience is a virtue...</h1>
         : 
-        <div className='flex flex-col gap-3 p-3 rounded-md items-center'>
-          <h1 className='text-xl font-semibold underline'>Posts you made:</h1>
+        <>
+        <h1 className='text-xl font-semibold underline'>Posts you made:</h1>
+        <div className='flex flex-wrap w-full gap-10 p-3 rounded-md justify-center'>
           {
+            getUserPosts.length == 0 
+            ?
+            <>
+              <div className='mt-5'>
+                <h1 className='font-bold text-gray-400 text-xl'>It's empty here...</h1>
+              </div>
+            </>
+            :
             getUserPosts.map((data, index) => {
               return(
                 <div className='flex flex-col gap-1 justify-center' key={index}>
@@ -91,7 +103,7 @@ function Account() {
                     className='flex flex-col items-center gap-3 text-center shadow-xl border-2 border-gray-400 p-5 rounded-md'>
                       <h1 className='font-semibold'>{data.nameOfSeller}</h1>
                       <h1 className='text-base'>{data.caption}</h1>
-                      <img className='rounded-md w-40 h-40' src={`${data.imgUrl}`} alt="image_of_item" />
+                      <img className='rounded-md w-52 h-40' src={`${data.imgUrl}`} alt="image_of_item" />
                       <h1 className='font-bold'>Location: <i className='text-gray-400'>{data.location}</i></h1>
                       <h1 className='font-bold'>Price: <i className='text-gray-400'>{data.price}</i></h1>
                   </div>
@@ -111,8 +123,8 @@ function Account() {
             })
           }
         </div>
+        </>
       }
-      <BackButton buttonText='Back to homepage' />
     </div>
   )
 }

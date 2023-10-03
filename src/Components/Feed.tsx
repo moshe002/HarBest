@@ -29,31 +29,11 @@ const Feed:React.FC<UpdatePostProps> = ({ updatePost }) => {
   const getAllPosts = async () => {  
     const { data, error } = await supabase.from('posts').select()
     if(data) {
-      //console.log(data)
-      // data.forEach((val) => {
-      //   getFilesInBucket(val.nameOfSeller) // gives the function with the username as its parameter
-      // })
       setPosts(data.reverse())
     } 
     error && console.log(error)
     setLoading(false) 
   }
-
-  // const getFilesInBucket = async (name:string) => {  
-  //   const { data, error } = await supabase
-  //   .storage
-  //   .from('postImages')
-  //   .list(name, {
-  //     limit: 100,
-  //     offset: 0,
-  //     sortBy: { column: 'name', order: 'asc' },
-  //   })
-  //   if(data){
-  //     //console.log(data)
-  //     setImgData(data)
-  //   } 
-  //   error && console.error(error)
-  // }
 
   return (
     <>
@@ -65,15 +45,14 @@ const Feed:React.FC<UpdatePostProps> = ({ updatePost }) => {
                 <div 
                   className='flex flex-col items-center gap-3 text-center shadow-xl border-2 p-5 rounded-md' 
                   key={index}>
-                    <h1 className='font-semibold'>{data.nameOfSeller}</h1>
+                    <h1 className='font-bold text-green-500 text-xl'>{data.nameOfSeller}</h1>
                     <h1 className='text-base'>{data.caption}</h1>
-                    <img
-                      key={index} 
-                      className='rounded-md w-40 h-40'
+                    <img 
+                      className='rounded-md w-52 h-40'
                       src={`${data.imgUrl}`} 
                       alt="image_of_item" />
                     <h1 className='font-bold'>Location: <i className='text-gray-400'>{data.location}</i></h1>
-                    <h1 className='font-bold'>Price: <i className='text-gray-400'>{data.price}</i></h1>
+                    <h1 className='font-bold'>Price: <b className='text-red-400'>{data.price}</b></h1>
                     <BuyButton />
                 </div>
               )

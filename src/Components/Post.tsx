@@ -66,18 +66,6 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
         error && console.error(error)
     }
 
-    // const getImageUrl = async (username:string) => {        
-    //     const { data } = await supabase
-    //     .storage
-    //     .from('postImages')
-    //     .getPublicUrl(`${username}/${image?.name}`)
-    //     if(data){
-    //         const publicImageUrl = data.publicUrl 
-    //         //console.log(publicImageUrl)
-    //         //setImageUrl(publicImageUrl)
-    //     }
-    // }
-
   return (
     <>
         { 

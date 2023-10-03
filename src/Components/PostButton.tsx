@@ -17,7 +17,7 @@ const PostButton:React.FC<UpdatePostProps> = ({ setUpdatePost }) => {
       { post && <Post setPost={setPost} setUpdatePost={setUpdatePost} /> }
       <button
         onClick={() => setPost(true)}
-        title='post your product'
+        title='sell your product'
         className='text-white font-bold bg-green-500 hover:bg-green-600 p-3 rounded-md duration-150' 
         type='button'>
             <div className='flex gap-1 items-center justify-center'>
