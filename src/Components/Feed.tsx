@@ -8,6 +8,7 @@ interface PostProps {
   emailOfSeller: string;
   location: string;
   nameOfSeller: string;
+  quantity: number;
   price: number;
   imgUrl: string;
 }
@@ -37,9 +38,15 @@ const Feed:React.FC<UpdatePostProps> = ({ updatePost }) => {
 
   return (
     <>
-      <div className='flex flex-col gap-5 p-3 w-2/6 overflow-y-auto'>
+      <div className='flex flex-col items-center gap-5 p-3 w-2/6 overflow-y-auto'>
         { loading && <h1 className='text-center text-3xl text-gray-400 mt-10 font-bold'>Loading...</h1> }
           {
+            !loading && posts.length == 0
+            ?
+            <>
+              <h1 className='text-xl text-gray-400 font-bold mt-10'>No posts to show...</h1>
+            </>
+            :
             posts.map((data, index) => {
               return (
                 <div 
@@ -48,11 +55,19 @@ const Feed:React.FC<UpdatePostProps> = ({ updatePost }) => {
                     <h1 className='font-bold text-green-500 text-xl'>{data.nameOfSeller}</h1>
                     <h1 className='text-base'>{data.caption}</h1>
                     <img 
-                      className='rounded-md w-52 h-40'
+                      className='rounded-md w-auto h-40'
                       src={`${data.imgUrl}`} 
                       alt="image_of_item" />
-                    <h1 className='font-bold'>Location: <i className='text-gray-400'>{data.location}</i></h1>
-                    <h1 className='font-bold'>Price: <b className='text-red-400'>{data.price}</b></h1>
+                    <h1 className='font-bold'>
+                      Location:&nbsp;
+                      <i className='text-gray-400'>
+                        {data.location}
+                      </i>
+                    </h1>
+                    <div className='flex gap-3'>
+                      <h1 className='font-bold'>Quantity: <b className='text-blue-400'>{data.quantity}</b></h1>
+                      <h1 className='font-bold'>Price: <b className='text-red-400'>{data.price}</b></h1>
+                    </div>
                     <BuyButton />
                 </div>
               )

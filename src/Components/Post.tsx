@@ -14,8 +14,9 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
 
     const [caption, setCaption] = useState<string>('')
     const [location, setLocation] = useState<string>('')
+    const [quantity, setQuantity] = useState<number>(0)
     const [price, setPrice] = useState<number>(0)
-    const [imageUrl, setImageUrl] = useState<string>('')
+    //const [imageUrl, setImageUrl] = useState<string>('')
     const [image, setImage] = useState<File | any>()
 
     const [successPost, setSuccessPost] = useState<boolean>(false)
@@ -41,6 +42,7 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
             nameOfSeller: username,
             emailOfSeller: email,
             location: location,
+            quantity: quantity,
             price: price,
             imgUrl: publicURL.publicUrl
         })
@@ -88,7 +90,7 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
                             <div className='flex flex-col items-center'>
                                 <label className='font-semibold' htmlFor="caption">Caption:</label>
                                 <textarea 
-                                    className='outline-none text-center border-2 p-1 rounded-md placeholder-gray-400 focus:border-green-400' 
+                                    className='outline-none font-semibold text-center border-2 p-1 rounded-md placeholder-gray-400 focus:border-green-400' 
                                     placeholder='Write your caption here...' 
                                     name="caption" 
                                     id="caption" 
@@ -102,7 +104,7 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
                             <div className='flex flex-col items-center border-2 border-dashed p-3 rounded-md'>
                                 <label className='font-semibold' htmlFor="image">Image:</label>
                                 <input 
-                                    className='outline-none focus:border-green-400' 
+                                    className='outline-none' 
                                     type="file"
                                     accept='.jpg, .jpeg, .png, .gif' 
                                     name="image" 
@@ -116,7 +118,7 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
                             <div className='flex flex-col items-center'>
                                 <label className='font-semibold' htmlFor="location">Location:</label>
                                 <input 
-                                    className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' 
+                                    className='outline-none font-semibold text-gray-600 border-2 p-1 text-center rounded-md focus:border-green-400' 
                                     placeholder='Cebu City' 
                                     type="text" 
                                     name='location' 
@@ -125,17 +127,31 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
                                     onChange={(e) => { setLocation(e.target.value) }}
                                     required />
                             </div>
-                            <div className='flex flex-col items-center'>
-                                <label className='font-semibold' htmlFor="price">Price:</label>
-                                <input 
-                                    className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' 
-                                    placeholder='10000' 
-                                    type="number" 
-                                    name='price' 
-                                    id='price' 
-                                    value={price}
-                                    onChange={(e:any) => { setPrice(e.target.value) }}
-                                    required />
+                            <div className='flex gap-3'>
+                                <div className='flex flex-col items-center'>
+                                    <label className='font-semibold' htmlFor="quantity">Quantity:</label>
+                                    <input 
+                                        className='outline-none font-semibold text-blue-500 border-2 p-1 text-center rounded-md focus:border-green-400' 
+                                        placeholder='10000' 
+                                        type="number" 
+                                        name='quantity' 
+                                        id='quantity' 
+                                        value={quantity}
+                                        onChange={(e:any) => { setQuantity(e.target.value) }}
+                                        required />
+                                </div>
+                                <div className='flex flex-col items-center'>
+                                    <label className='font-semibold' htmlFor="price">Price:</label>
+                                    <input 
+                                        className='outline-none font-semibold text-red-500 border-2 p-1 text-center rounded-md focus:border-green-400' 
+                                        placeholder='10000' 
+                                        type="number" 
+                                        name='price' 
+                                        id='price' 
+                                        value={price}
+                                        onChange={(e:any) => { setPrice(e.target.value) }}
+                                        required />
+                                </div>
                             </div>
                             <button
                                 className='font-semibold p-3 rounded-md bg-green-400 hover:bg-green-600 text-white duration-150' 

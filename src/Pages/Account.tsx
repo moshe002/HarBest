@@ -5,12 +5,14 @@ import { VscAccount } from 'react-icons/vsc'
 import BackButton from '../Components/BackButton'
 import DeletePost from '../Components/DeletePost'
 import EditPost from '../Components/EditPost'
+import LogoutButton from '../Components/LogoutButton'
 
 interface PostProps {
   caption: string;
   emailOfSeller: string;
   nameOfSeller: string;
   location: string;
+  quantity: number;
   price: number;
   id: string;
   imgUrl: string;
@@ -60,12 +62,15 @@ function Account() {
       <div className='fixed top-10 left-10'>
         <BackButton buttonText='Back to homepage' />
       </div>
+      <div className='fixed top-10 right-10'>
+        <LogoutButton />
+      </div>
       <div className='flex flex-col gap-3 items-center p-3'>
         <h1 className='text-7xl'><VscAccount /></h1>
         {
           loading
           ?
-            <h1 className='mt-3 text-3xl text-gray-400 font-bold'>Fetching data...</h1>
+            <h1 className='mt-5 text-3xl text-gray-400 font-bold'>Fetching data...</h1>
           :
           <>
             <div className='text-center'>
@@ -103,9 +108,17 @@ function Account() {
                     className='flex flex-col items-center gap-3 text-center shadow-xl border-2 border-gray-400 p-5 rounded-md'>
                       <h1 className='font-semibold'>{data.nameOfSeller}</h1>
                       <h1 className='text-base'>{data.caption}</h1>
-                      <img className='rounded-md w-52 h-40' src={`${data.imgUrl}`} alt="image_of_item" />
-                      <h1 className='font-bold'>Location: <i className='text-gray-400'>{data.location}</i></h1>
-                      <h1 className='font-bold'>Price: <i className='text-gray-400'>{data.price}</i></h1>
+                      <img className='rounded-md w-auto h-40' src={`${data.imgUrl}`} alt="image_of_item" />
+                      <h1 className='font-bold'>
+                        Location:&nbsp; 
+                        <i className='text-gray-400'>
+                          {data.location}
+                        </i>
+                      </h1>
+                      <div className='flex gap-3'>
+                        <h1 className='font-bold'>Quantity: <b className='text-blue-400'>{data.quantity}</b></h1>
+                        <h1 className='font-bold'>Price: <b className='text-red-400'>{data.price}</b></h1>
+                      </div>
                   </div>
                   <div className='flex flex-row gap-2 justify-center items-center'>
                     <EditPost
@@ -113,6 +126,7 @@ function Account() {
                       name={data.nameOfSeller}
                       caption={data.caption}
                       imgUrl={data.imgUrl}
+                      quantity={data.quantity}
                       location={data.location}
                       price={data.price}
                       setChecker={setChecker} />

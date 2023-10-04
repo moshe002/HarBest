@@ -8,6 +8,7 @@ interface EditPostProps {
   caption: string;
   imgUrl: string;
   location: string;
+  quantity: number;
   price: number;
   setChecker: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -18,6 +19,7 @@ const EditPost:React.FC<EditPostProps> = ({
   caption,
   imgUrl,
   location,
+  quantity,
   price,
   setChecker
  }) => {
@@ -36,6 +38,7 @@ const EditPost:React.FC<EditPostProps> = ({
           caption={caption}
           imgUrl={imgUrl}
           location={location}
+          quantity={quantity}
           price={price}
           setEditModal={setEditModal}
           setSuccessEdit={setSuccessEdit} /> 
@@ -58,6 +61,7 @@ interface EditModalProps {
   imgUrl: string;
   location: string;
   price: number;
+  quantity: number;
   setSuccessEdit: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -69,12 +73,15 @@ const EditPostModal:React.FC<EditModalProps> = ({
   caption,
   imgUrl,
   location,
-  price 
+  price,
+  quantity
 }) => {
 
   const [newCaption, setNewCaption] = useState<string>(caption)
   const [imageDetails, setImageDetails] = useState<File | any>() // this can get image.name for file location
   const [newLocation, setNewLocation] = useState<string>(location)
+  const [newQuantity, setNewQuantity] = useState<number>(quantity)
+  //const [newImageUrl, setNewImageUrl] = useState<string>('')
   const [newPrice, setNewPrice] = useState<number>(price)
 
   const submitEditPost = async (e:React.SyntheticEvent) => {
@@ -86,19 +93,22 @@ const EditPostModal:React.FC<EditModalProps> = ({
     //await removeImage(imageName)
 
     //await updateImage(imageName)
-    await uploadNewImage()
-
-    // get the url of the image
-    const { data:publicURL } = supabase.storage.from('postImages').getPublicUrl(`${name}/${imageDetails.name}`) // ${name}/${imageName}
-
-    await updatePost(publicURL.publicUrl) // updates the post
+    if(imageDetails != null){
+      await uploadNewImage()
+      // get the url of the image
+      const { data:publicURL } = supabase.storage.from('postImages').getPublicUrl(`${name}/${imageDetails.name}`) // ${name}/${imageName}
+      await updatePost(publicURL.publicUrl) // updates the post
+      //console.log("new url: ", publicURL.publicUrl)
+    } else {
+      await updatePost(imgUrl) // updates the post
+    }
 
     // handle modals
     setEditModal(false)
     setSuccessEdit(true)
   }
 
-  const updatePost = async (url: string) => {
+  const updatePost = async (imageUrl: string) => {
     if(id) {
       const { error } = await supabase
       .from('posts')
@@ -106,7 +116,8 @@ const EditPostModal:React.FC<EditModalProps> = ({
         caption: newCaption,
         location: newLocation,
         price: newPrice,
-        imgUrl: url //imgUrl //publicURL.publicUrl //(new url most be here)
+        quantity: newQuantity,
+        imgUrl: imageUrl //publicURL.publicUrl //(new url most be here)
       })
       .eq('id', id)
       error && console.error(error)
@@ -169,54 +180,66 @@ const EditPostModal:React.FC<EditModalProps> = ({
           </div>
           <form className='flex flex-col items-center gap-3 p-3' onSubmit={submitEditPost}>
               <div className='flex flex-col items-center'>
-                  <label className='font-semibold' htmlFor="caption">Caption:</label>
+                <label className='font-semibold' htmlFor="caption">Caption:</label>
                   <textarea 
-                      className='outline-none text-center border-2 p-1 rounded-md placeholder-gray-400 focus:border-green-400' 
-                      placeholder={caption} 
-                      name="caption" 
-                      id="caption" 
-                      cols={50} 
-                      rows={3}
-                      //value={caption}
-                      onChange={(e) => { setNewCaption(e.target.value) }}>
+                    className='outline-none font-semibold text-center border-2 p-1 rounded-md placeholder-gray-400 focus:border-green-400' 
+                    placeholder={caption} 
+                    name="caption" 
+                    id="caption" 
+                    cols={50} 
+                    rows={3}
+                    //value={caption}
+                    onChange={(e) => { setNewCaption(e.target.value) }}>
                   </textarea>
               </div>
               <div className='flex flex-col items-center border-2 border-dashed p-3 rounded-md'>
-                  <label className='font-semibold' htmlFor="image">Image:</label>
+                <label className='font-semibold' htmlFor="image">Image:</label>
                   <input 
-                      className='outline-none focus:border-green-400' 
-                      type="file"
-                      accept='.jpg, .jpeg, .png, .gif' 
-                      name="image" 
-                      id="image"
-                      onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                          const fileImage = e.target.files?.[0]
-                          setImageDetails(fileImage)
-                      }} 
-                      required />
+                    className='outline-none focus:border-green-400' 
+                    type="file"
+                    accept='.jpg, .jpeg, .png, .gif' 
+                    name="image" 
+                    id="image"
+                    onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
+                        const fileImage = e.target.files?.[0]
+                        setImageDetails(fileImage)
+                    }} />
               </div>
               <div className='flex flex-col items-center'>
-                  <label className='font-semibold' htmlFor="location">Location:</label>
+                <label className='font-semibold' htmlFor="location">Location:</label>
                   <input 
-                      className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' 
-                      placeholder={location} 
-                      type="text" 
-                      name='location' 
-                      id='location' 
-                      //value={location}
-                      onChange={(e) => { setNewLocation(e.target.value) }} />
+                    className='outline-none font-semibold text-gray-600 border-2 p-1 text-center rounded-md focus:border-green-400' 
+                    placeholder={location} 
+                    type="text" 
+                    name='location' 
+                    id='location' 
+                    //value={location}
+                    onChange={(e) => { setNewLocation(e.target.value) }} />
               </div>
-              <div className='flex flex-col items-center'>
+              <div className='flex gap-3'>
+                <div className='flex flex-col items-center'>
+                  <label className='font-semibold' htmlFor="quantity">Quantity:</label>
+                    <input 
+                      className='outline-none font-semibold text-blue-500 placeholder-blue-300 border-2 p-1 text-center rounded-md focus:border-green-400' 
+                      placeholder={`${quantity}`} 
+                      type="number" 
+                      name='quantity' 
+                      id='quantity' 
+                      //value={price}
+                      onChange={(e:any) => { setNewQuantity(e.target.value) }} />
+                </div>
+                <div className='flex flex-col items-center'>
                   <label className='font-semibold' htmlFor="price">Price:</label>
-                  <input 
-                      className='outline-none border-2 p-1 text-center rounded-md focus:border-green-400' 
+                    <input 
+                      className='outline-none font-semibold text-red-500 placeholder-red-300 border-2 p-1 text-center rounded-md focus:border-green-400' 
                       placeholder={`${price}`} 
                       type="number" 
                       name='price' 
                       id='price' 
                       //value={price}
                       onChange={(e:any) => { setNewPrice(e.target.value) }} />
-              </div>
+                </div>
+              </div>  
               <button
                   className='font-semibold p-3 rounded-md bg-green-400 hover:bg-green-600 text-white duration-150' 
                   type='submit'>
