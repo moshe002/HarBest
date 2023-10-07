@@ -5,6 +5,7 @@ import { supabase } from '../supabase-config'
 interface EditPostProps {
   id: string;
   name:string;
+  itemName: string;
   caption: string;
   imgUrl: string;
   location: string;
@@ -16,6 +17,7 @@ interface EditPostProps {
 const EditPost:React.FC<EditPostProps> = ({ 
   id,
   name,
+  itemName,
   caption,
   imgUrl,
   location,
@@ -35,6 +37,7 @@ const EditPost:React.FC<EditPostProps> = ({
         <EditPostModal 
           id={id}
           name={name}
+          itemName={itemName}
           caption={caption}
           imgUrl={imgUrl}
           location={location}
@@ -57,6 +60,7 @@ interface EditModalProps {
   setEditModal: React.Dispatch<React.SetStateAction<boolean>>;
   id: string;
   name: string;
+  itemName: string;
   caption: string;
   imgUrl: string;
   location: string;
@@ -70,6 +74,7 @@ const EditPostModal:React.FC<EditModalProps> = ({
   setEditModal,
   id,
   name,
+  itemName,
   caption,
   imgUrl,
   location,
@@ -77,6 +82,7 @@ const EditPostModal:React.FC<EditModalProps> = ({
   quantity
 }) => {
 
+  const [newItemName, setNewItemName] = useState<string>(itemName)
   const [newCaption, setNewCaption] = useState<string>(caption)
   const [imageDetails, setImageDetails] = useState<File | any>() // this can get image.name for file location
   const [newLocation, setNewLocation] = useState<string>(location)
@@ -113,6 +119,7 @@ const EditPostModal:React.FC<EditModalProps> = ({
       const { error } = await supabase
       .from('posts')
       .update({ 
+        itemName: newItemName,
         caption: newCaption,
         location: newLocation,
         price: newPrice,
@@ -179,6 +186,18 @@ const EditPostModal:React.FC<EditModalProps> = ({
               </button>
           </div>
           <form className='flex flex-col items-center gap-3 p-3' onSubmit={submitEditPost}>
+              <div className='flex flex-col items-center'>
+                <label className='font-semibold' htmlFor="itemName">Item name:</label>
+                <input 
+                  className='outline-none font-semibold text-gray-400 border-2 p-1 text-center rounded-md focus:border-green-400'
+                  type="text" 
+                  id='itemName' 
+                  name='itemName'
+                  placeholder={itemName}
+                  //value={itemName}
+                  onChange={e => setNewItemName(e.target.value)}
+                  required />
+              </div>
               <div className='flex flex-col items-center'>
                 <label className='font-semibold' htmlFor="caption">Caption:</label>
                   <textarea 

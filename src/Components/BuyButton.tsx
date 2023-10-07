@@ -1,13 +1,43 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-function BuyButton() {
+import BuyModal from './BuyModal'
 
-  const handleBuy = () => {
-    console.log('you bought')
-  }
+interface BuyProps {
+  email: string;
+  username: string;
+  itemName: string;
+  location: string;
+  quantity: number;
+  price: number;
+}
+
+const BuyButton:React.FC<BuyProps> = ({ 
+  email,
+  itemName,
+  price,
+  quantity,
+  username,
+  location
+ }) => {
+
+  const [buyModal, setBuyModal] = useState<boolean>(false)
+
+  const handleBuy = () => setBuyModal(true)
 
   return (
     <>
+      { 
+        buyModal 
+          && 
+          <BuyModal
+            email={email}
+            itemName={itemName}
+            username={username}
+            price={price}
+            quantity={quantity}
+            location={location}
+            setBuyModal={setBuyModal} /> 
+      }
         <button
           title='buy the product'
           className='p-3 text-white font-semibold bg-green-500 hover:bg-green-600 rounded-md duration-150' 

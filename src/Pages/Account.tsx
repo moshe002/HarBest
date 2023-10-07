@@ -8,6 +8,7 @@ import EditPost from '../Components/EditPost'
 import LogoutButton from '../Components/LogoutButton'
 
 interface PostProps {
+  itemName: string;
   caption: string;
   emailOfSeller: string;
   nameOfSeller: string;
@@ -106,7 +107,8 @@ function Account() {
                 <div className='flex flex-col gap-1 justify-center' key={index}>
                   <div
                     className='flex flex-col items-center gap-3 text-center shadow-xl border-2 border-gray-400 p-5 rounded-md'>
-                      <h1 className='font-semibold'>{data.nameOfSeller}</h1>
+                      <h1 className='font-semibold text-green-500'>{data.nameOfSeller}</h1>
+                      <h1 className='text-lg font-bold'>{data.itemName}</h1>
                       <h1 className='text-base'>{data.caption}</h1>
                       <img className='rounded-md w-auto h-40' src={`${data.imgUrl}`} alt="image_of_item" />
                       <h1 className='font-bold'>
@@ -124,6 +126,7 @@ function Account() {
                     <EditPost
                       id={data.id}
                       name={data.nameOfSeller}
+                      itemName={data.itemName}
                       caption={data.caption}
                       imgUrl={data.imgUrl}
                       quantity={data.quantity}

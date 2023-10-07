@@ -12,6 +12,7 @@ interface PostProps {
 
 const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
 
+    const [itemName, setItemName] = useState<string>('')
     const [caption, setCaption] = useState<string>('')
     const [location, setLocation] = useState<string>('')
     const [quantity, setQuantity] = useState<number>(0)
@@ -38,6 +39,7 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
         const { error } = await supabase
         .from('posts')
         .insert({ 
+            itemName: itemName,
             caption: caption, 
             nameOfSeller: username,
             emailOfSeller: email,
@@ -88,10 +90,22 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
                         </div>
                         <form className='flex flex-col items-center gap-3 p-3' onSubmit={handlePost}>
                             <div className='flex flex-col items-center'>
+                                <label className='font-semibold' htmlFor="itemName">Item name:</label>
+                                <input 
+                                    className='outline-none font-semibold text-gray-600 border-2 p-1 text-center rounded-md focus:border-green-400'
+                                    type="text" 
+                                    id='itemName' 
+                                    name='itemName'
+                                    placeholder='Ex. Eggplant'
+                                    value={itemName}
+                                    onChange={e => setItemName(e.target.value)}
+                                    required />
+                            </div>
+                            <div className='flex flex-col items-center'>
                                 <label className='font-semibold' htmlFor="caption">Caption:</label>
                                 <textarea 
                                     className='outline-none font-semibold text-center border-2 p-1 rounded-md placeholder-gray-400 focus:border-green-400' 
-                                    placeholder='Write your caption here...' 
+                                    placeholder='I am selling ...' 
                                     name="caption" 
                                     id="caption" 
                                     cols={50} 
@@ -119,7 +133,7 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
                                 <label className='font-semibold' htmlFor="location">Location:</label>
                                 <input 
                                     className='outline-none font-semibold text-gray-600 border-2 p-1 text-center rounded-md focus:border-green-400' 
-                                    placeholder='Cebu City' 
+                                    placeholder='Ex. Cebu City' 
                                     type="text" 
                                     name='location' 
                                     id='location' 
@@ -132,7 +146,7 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
                                     <label className='font-semibold' htmlFor="quantity">Quantity:</label>
                                     <input 
                                         className='outline-none font-semibold text-blue-500 border-2 p-1 text-center rounded-md focus:border-green-400' 
-                                        placeholder='10000' 
+                                        //placeholder='Ex. 150' 
                                         type="number" 
                                         name='quantity' 
                                         id='quantity' 

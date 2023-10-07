@@ -4,6 +4,7 @@ import { supabase } from '../supabase-config'
 import BuyButton from './BuyButton'
 
 interface PostProps {
+  itemName: string;
   caption: string;
   emailOfSeller: string;
   location: string;
@@ -53,6 +54,7 @@ const Feed:React.FC<UpdatePostProps> = ({ updatePost }) => {
                   className='flex flex-col items-center gap-3 text-center shadow-xl border-2 p-5 rounded-md' 
                   key={index}>
                     <h1 className='font-bold text-green-500 text-xl'>{data.nameOfSeller}</h1>
+                    <h1 className='text-lg font-bold'>{data.itemName}</h1>
                     <h1 className='text-base'>{data.caption}</h1>
                     <img 
                       className='rounded-md w-auto h-40'
@@ -68,7 +70,13 @@ const Feed:React.FC<UpdatePostProps> = ({ updatePost }) => {
                       <h1 className='font-bold'>Quantity: <b className='text-blue-400'>{data.quantity}</b></h1>
                       <h1 className='font-bold'>Price: <b className='text-red-400'>{data.price}</b></h1>
                     </div>
-                    <BuyButton />
+                    <BuyButton
+                      email={data.emailOfSeller}
+                      username={data.nameOfSeller}
+                      itemName={data.itemName}
+                      location={data.location}
+                      quantity={data.quantity}
+                      price={data.price} />
                 </div>
               )
             })
