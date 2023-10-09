@@ -12,6 +12,8 @@ function Login() {
   const navigate = useNavigate();
 
   const [showPass, setShowPass] = useState<boolean>(false)
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
   const [changeType, setChangeType] = useState<string>('password')
   const [checker, setChecker] = useState<boolean>(false)
   const [passwordText, setPasswordText] = useState<string>('Password must be equal to or greater than 6 characters.')
@@ -20,8 +22,9 @@ function Login() {
   const [checkUser, setCheckUser] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
 
-  const handleChangeInput = (e:React.SyntheticEvent) => {
-    let inputText = e.target.value
+  const handleChangeInput = (pass:string) => {
+    let inputText = pass
+    setPassword(pass)
     inputText.length == 0 ? setShowPass(false) : setShowPass(true)
     if(inputText.length < 6) {
       setPasswordChecker(true)
@@ -38,8 +41,8 @@ function Login() {
     e.preventDefault()
     setLoading(true)
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: e.target.email.value,
-      password: e.target.password.value,
+      email: email,
+      password: password,
     })
     let checker:boolean = false
     if(data){
@@ -72,7 +75,8 @@ function Login() {
                       name='email' 
                       id='email'
                       title='email' 
-                      type="email" 
+                      type="email"
+                      onChange={e => setEmail(e.target.value)}
                       required />
               </div>
               <div className='flex flex-col items-center text-center'>
@@ -83,7 +87,7 @@ function Login() {
                       id='password'
                       title='password' 
                       type={changeType} 
-                      onChange={handleChangeInput}
+                      onChange={e => handleChangeInput(e.target.value)}
                       //maxLength={8}
                       //minLength={8}
                       required />

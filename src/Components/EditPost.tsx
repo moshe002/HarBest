@@ -95,8 +95,8 @@ const EditPostModal:React.FC<EditModalProps> = ({
   const submitEditPost = async (e:React.SyntheticEvent) => {
     e.preventDefault()
     setLoading(true)
-    const urlParts = imgUrl.split('/');
-    const imageName = urlParts.pop();
+    //const urlParts = imgUrl.split('/');
+    //const imageName = urlParts.pop();
     //console.log(imageName)
 
     //await removeImage(imageName)

@@ -9,7 +9,7 @@ function Search() {
 
     const handleSearch = (e:React.SyntheticEvent) => {
         e.preventDefault()
-        console.log('search ' + e.target.searchInput.value)
+        //console.log('search ' + e.target.searchInput.value)
     }
 
   return (

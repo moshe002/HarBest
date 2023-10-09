@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import Header from '../Components/Header'
 import Feed from '../Components/Feed'

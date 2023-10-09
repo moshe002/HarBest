@@ -10,6 +10,9 @@ import PasswordChecker from '../Components/PasswordChecker'
 function Signup() {
 
   const [showPass, setShowPass] = useState<boolean>(false)
+  const [userName, setUserName] = useState<string>('')
+  const [userEmail, setUserEmail] = useState<string>('')
+  const [userPassword, setUserPassword] = useState<string>('')
   const [changeType, setChangeType] = useState<string>('password')
   const [checker, setChecker] = useState<boolean>(false)
   const [userSignedIn, setUserSignedIn] = useState<boolean>(false)
@@ -21,9 +24,9 @@ function Signup() {
   const handleSubmit = async (e:React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    let email:string = e.target.email.value
-    let password:string = e.target.password.value 
-    let username:string = e.target.username.value
+    let email:string = userEmail
+    let password:string = userPassword
+    let username:string = userName
     const { data, error } = await supabase.auth.signUp({
       email: email,
       password: password,
@@ -43,8 +46,9 @@ function Signup() {
     setLoading(false)
   }
 
-  const handleChangeInput = (e:React.SyntheticEvent) => {
-    let inputText = e.target.value
+  const handleChangeInput = (pass:string) => {
+    let inputText = pass
+    setUserPassword(pass)
     inputText.length == 0 ? setShowPass(false) : setShowPass(true)
     if(inputText.length < 6) {
       setPasswordChecker(true)
@@ -60,7 +64,7 @@ function Signup() {
     <>
       { userSignedIn && <UserSignedIn /> }  
       <Header />
-      <div className='flex flex-col items-center justify-center p-3 h-screen'>
+      <div className='flex flex-col items-center justify-center p-10 h-screen'>
           <h1 className='text-blue-500 text-2xl font-bold'>Signup here</h1>
           <br />
           <form onSubmit={handleSubmit} className='flex flex-col gap-5 border-2 p-5 rounded-md' action="">
@@ -72,6 +76,7 @@ function Signup() {
                   id='email'
                   title='email'
                   type="email" 
+                  onChange={e => setUserEmail(e.target.value)}
                   required />
             </div>
             <div className='flex flex-col text-center'>
@@ -82,6 +87,7 @@ function Signup() {
                   id='username'
                   title='username'
                   type="text" 
+                  onChange={e => setUserName(e.target.value)}
                   required />
             </div>
             <div className='flex flex-col items-center text-center'>
@@ -92,7 +98,7 @@ function Signup() {
                 id='password'
                 title='password' 
                 type={changeType} 
-                onChange={handleChangeInput}
+                onChange={e => handleChangeInput(e.target.value)}
                 required />
                 { passwordChecker 
                   && 
