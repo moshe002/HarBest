@@ -71,7 +71,7 @@ function Account() {
         {
           loading
           ?
-            <h1 className='mt-5 text-3xl text-gray-400 font-bold'>Fetching data...</h1>
+            <h1 className='mt-5 text-3xl text-gray-400 font-bold animate-pulse'>Fetching data...</h1>
           :
           <>
             <div className='text-center'>
@@ -88,7 +88,7 @@ function Account() {
       { 
         loading 
         ? 
-        <h1 className='mt-3 text-3xl text-gray-400 font-bold'>Patience is a virtue...</h1>
+        <h1 className='mt-3 text-3xl text-gray-400 font-bold animate-pulse'>Patience is a virtue...</h1>
         : 
         <>
         <h1 className='text-xl font-semibold underline'>Posts you made:</h1>

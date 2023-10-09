@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
-//import { supabase } from '../supabase-config';
+import emailjs from '@emailjs/browser';
+import { supabase } from '../supabase-config';
 
 interface BuyProps {
   setBuyModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,10 +24,29 @@ const BuyModal:React.FC<BuyProps> = ({
 }) => {
 
   const [confirmPurchase, setConfirmPurchase] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
   
-  const handleBuy = (e:React.SyntheticEvent) => {
+  const handleBuy = async (e:React.SyntheticEvent) => {
     e.preventDefault()
-    setConfirmPurchase(true)
+    setLoading(true)
+
+    const { data: { user } } = await supabase.auth.getUser()
+    //let username:string = user?.user_metadata.username
+    //let email:string | undefined = user?.email
+
+    await emailjs.send('service_qkn2n87', 'template_gk9x7wl', {
+      to_name: user?.email,
+      subject: 'HarBest Purchase',
+      message: `Purchase Successful! You purchased ${itemName} with a quantity of ${quantity} and with a price of ${price}`,
+    }, 'zD8rVYJxeYDtN-AFB')
+      .then((result) => {
+          console.log(result.text);
+      }, (error) => {
+          console.log(error.text);
+      });
+      
+      setConfirmPurchase(true)
+      setLoading(false)
   }
 
   return (
@@ -71,6 +91,7 @@ const BuyModal:React.FC<BuyProps> = ({
                     <h1 className='text-gray-500 text-lg'>Location:&nbsp;</h1>
                     <h1 className='font-semibold text-lg'>{location}</h1>
                   </div>
+                  { loading && <h1 className='font-bold text-blue-500 text-xl animate-bounce'>Loading...</h1> }
                   <button 
                     className='p-3 text-lg text-white font-semibold bg-red-500 rounded-md mt-2 hover:bg-red-400' 
                     onClick={handleBuy} 
@@ -102,7 +123,7 @@ const PurchaseSubmitted:React.FC<SubmittedPurchaseProp> = ({ setConfirmPurchase,
       <div className='flex flex-col w-1/3 items-center gap-5 p-10 bg-white shadow-2xl rounded-md'>
         <div className='flex flex-col items-center gap-5 p-3'>
           <h1 className='font-bold text-3xl text-green-500'>Purchase Confirmed!</h1>
-          <h1 className='text-xl font-semibold'>Please check your email for the details, thank you!</h1>
+          <h1 className='text-xl font-semibold'>Please check your <b className='text-blue-400'>email</b> for the details, thank you!</h1>
           <button 
             className='w-min p-3 bg-red-500 font-semibold text-xl text-white rounded-md' 
             onClick={handleClose} 

@@ -12,8 +12,10 @@ const DeletePost:React.FC<DeleteProps> = ({ id, setChecker, imgUrl }) => {
 
     const [postDelete, setPostDelete] = useState<boolean>(false)
     const [doneDelete, setDoneDelete] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
     const deletePost = async () => {
+        setLoading(true)
         if(id){
             setPostDelete(false)
             setDoneDelete(true)
@@ -35,6 +37,7 @@ const DeletePost:React.FC<DeleteProps> = ({ id, setChecker, imgUrl }) => {
             data && console.log('deleted') //console.log(data)
             bucketError && console.error(bucketError)
         }
+        setLoading(false)
     }
 
     const handleSuccessDelete = () => {
@@ -44,7 +47,7 @@ const DeletePost:React.FC<DeleteProps> = ({ id, setChecker, imgUrl }) => {
 
   return (
     <>
-        { postDelete && <CheckDelete deletePost={deletePost} setPostDelete={setPostDelete} /> } 
+        { postDelete && <CheckDelete loading={loading} deletePost={deletePost} setPostDelete={setPostDelete} /> } 
         { doneDelete && <SuccessDelete handleSuccessDelete={handleSuccessDelete} /> }
         <button 
             className='rounded-md bg-red-400 hover:bg-red-500 text-white duration-150' 
@@ -60,15 +63,18 @@ const DeletePost:React.FC<DeleteProps> = ({ id, setChecker, imgUrl }) => {
 }
 
 interface CheckDeleteProps {
+    loading: boolean;
     deletePost: () => void;
     setPostDelete: React.Dispatch<React.SetStateAction<boolean>>;
 }
 // component that will verify if user does want or does not want to delete his/her post
-const CheckDelete:React.FC<CheckDeleteProps> = ({ deletePost, setPostDelete }) => {
+const CheckDelete:React.FC<CheckDeleteProps> = ({ loading, deletePost, setPostDelete }) => {
+        
     return(
         <div className='fixed top-0 left-0 p-5 w-full h-screen flex justify-center items-center bg-gray-600 bg-opacity-50 z-40'>
             <div className='flex flex-col items-center gap-5 p-5 bg-white shadow-2xl rounded-md'>
                 <h1 className='text-3xl font-semibold text-green-500'>Do you want to delete the post?</h1>
+                { loading && <h1 className='font-bold text-blue-500 text-xl animate-bounce'>Loading...</h1> }
                 <div className='flex flex-row gap-5'>
                     <button onClick={deletePost} title='yes please uwu' type='button'>
                         <p className='text-5xl p-1 rounded-full hover:bg-green-500 duration-150'>

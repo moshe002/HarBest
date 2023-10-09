@@ -16,9 +16,11 @@ function Signup() {
   const [passwordText, setPasswordText] = useState<string>('Password must be equal to or greater than 6 characters.')
   const [passwordChecker, setPasswordChecker] = useState<boolean>(false)
   const [passwordColor, setPasswordColor] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleSubmit = async (e:React.FormEvent) => {
     e.preventDefault()
+    setLoading(true)
     let email:string = e.target.email.value
     let password:string = e.target.password.value 
     let username:string = e.target.username.value
@@ -38,6 +40,7 @@ function Signup() {
       //console.log(data)
       setUserSignedIn(true)
     }
+    setLoading(false)
   }
 
   const handleChangeInput = (e:React.SyntheticEvent) => {
@@ -107,6 +110,7 @@ function Signup() {
                     setChangeType={setChangeType} />
                 }
             </div>
+            { loading && <h1 className='font-bold text-center text-blue-500 text-xl animate-bounce'>Loading...</h1> }
             <input 
               className='bg-green-300 hover:bg-green-500 text-white font-semibold cursor-pointer p-2 rounded-md duration-150' 
               type="submit" 

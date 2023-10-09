@@ -18,6 +18,7 @@ function Login() {
   const [passwordChecker, setPasswordChecker] = useState<boolean>(false)
   const [passwordColor, setPasswordColor] = useState<string>('')
   const [checkUser, setCheckUser] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleChangeInput = (e:React.SyntheticEvent) => {
     let inputText = e.target.value
@@ -35,6 +36,7 @@ function Login() {
 
   const handleLogin = async (e:React.FormEvent) => {
     e.preventDefault()
+    setLoading(true)
     const { data, error } = await supabase.auth.signInWithPassword({
       email: e.target.email.value,
       password: e.target.password.value,
@@ -53,6 +55,7 @@ function Login() {
     if(checker){
       navigate('/homepage')
     }
+    setLoading(false)
   }
 
   return (
@@ -101,6 +104,7 @@ function Login() {
                         setChangeType={setChangeType} />
                     }
               </div>
+              { loading && <h1 className='font-bold text-center text-gray-500 text-xl animate-bounce'>Loading...</h1> }
               <input className='bg-green-300 hover:bg-green-500 text-white font-semibold cursor-pointer p-2 rounded-md duration-150' type="submit" value="LOGIN"/>
           </form>
           <Link to={'/signup'}>

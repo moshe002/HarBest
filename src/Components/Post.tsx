@@ -21,15 +21,18 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
     const [image, setImage] = useState<File | any>()
 
     const [successPost, setSuccessPost] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
     const handlePost = async (e:React.SyntheticEvent) => {
         e.preventDefault()
+        setLoading(true)
         // caption, image, location, price, image url from storage
         const { data: { user } } = await supabase.auth.getUser()
         let username:string = user?.user_metadata.username
         let email:string | undefined = user?.email
         await postItems(username, email)
         setUpdatePost(true)
+        setLoading(false)
     }
 
     const postItems = async (username:string, email: string | undefined ) => {
@@ -167,6 +170,7 @@ const Post:React.FC<PostProps> = ({ setPost, setUpdatePost }) => {
                                         required />
                                 </div>
                             </div>
+                            { loading && <h1 className='font-bold text-red-500 text-xl animate-bounce'>Loading...</h1> }
                             <button
                                 className='font-semibold p-3 rounded-md bg-green-400 hover:bg-green-600 text-white duration-150' 
                                 type='submit'>

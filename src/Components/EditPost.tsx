@@ -90,8 +90,11 @@ const EditPostModal:React.FC<EditModalProps> = ({
   //const [newImageUrl, setNewImageUrl] = useState<string>('')
   const [newPrice, setNewPrice] = useState<number>(price)
 
+  const [loading, setLoading] = useState<boolean>(false)
+
   const submitEditPost = async (e:React.SyntheticEvent) => {
     e.preventDefault()
+    setLoading(true)
     const urlParts = imgUrl.split('/');
     const imageName = urlParts.pop();
     //console.log(imageName)
@@ -110,6 +113,7 @@ const EditPostModal:React.FC<EditModalProps> = ({
     }
 
     // handle modals
+    setLoading(false)
     setEditModal(false)
     setSuccessEdit(true)
   }
@@ -195,8 +199,7 @@ const EditPostModal:React.FC<EditModalProps> = ({
                   name='itemName'
                   placeholder={itemName}
                   //value={itemName}
-                  onChange={e => setNewItemName(e.target.value)}
-                  required />
+                  onChange={e => setNewItemName(e.target.value)} />
               </div>
               <div className='flex flex-col items-center'>
                 <label className='font-semibold' htmlFor="caption">Caption:</label>
@@ -259,6 +262,7 @@ const EditPostModal:React.FC<EditModalProps> = ({
                       onChange={(e:any) => { setNewPrice(e.target.value) }} />
                 </div>
               </div>  
+              { loading && <h1 className='font-bold text-blue-500 text-xl animate-bounce'>Loading...</h1> }
               <button
                   className='font-semibold p-3 rounded-md bg-green-400 hover:bg-green-600 text-white duration-150' 
                   type='submit'>
