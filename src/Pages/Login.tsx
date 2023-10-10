@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react' // useEffect
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from '../supabase-config';
 
@@ -21,6 +21,18 @@ function Login() {
   const [passwordColor, setPasswordColor] = useState<string>('')
   const [checkUser, setCheckUser] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
+
+  // useEffect(() => {
+  //   getSession()
+  // }, [])
+
+  // const getSession = async () => {
+  //   const { data, error } = await supabase.auth.getSession()  
+  //   if(data) {
+  //     console.log(data)
+  //   }
+  //   error && console.error(error)
+  // }
 
   const handleChangeInput = (pass:string) => {
     let inputText = pass
@@ -57,6 +69,7 @@ function Login() {
     //console.log('form submitted')
     if(checker){
       navigate('/homepage')
+      window.location.reload()
     }
     setLoading(false)
   }

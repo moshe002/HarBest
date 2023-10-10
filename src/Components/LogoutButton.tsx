@@ -16,6 +16,7 @@ function LogoutButton() {
                 console.log(error)
             }
             navigate('/')
+            window.location.reload()
         } catch(error){
             console.error(error)
         }
