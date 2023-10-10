@@ -4,7 +4,11 @@ import { useNavigate } from 'react-router-dom'
 
 import { HiOutlineLogout } from 'react-icons/hi'
 
-function LogoutButton() {
+interface LogoutProp {
+    setSession: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const LogoutButton:React.FC<LogoutProp> = ({ setSession }) => {
 
     const navigate = useNavigate()
 
@@ -15,8 +19,9 @@ function LogoutButton() {
             if(error){
                 console.log(error)
             }
+            setSession(false)
+            localStorage.removeItem('isLoggedIn');
             navigate('/')
-            window.location.reload()
         } catch(error){
             console.error(error)
         }

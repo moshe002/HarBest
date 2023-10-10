@@ -6,7 +6,11 @@ import Feed from '../Components/Feed'
 import PostAndSearch from '../Components/PostAndSearch'
 import LogoutAndAccountContainer from '../Components/LogoutAndAccountContainer'
 
-function Homepage() {
+interface HomepageProps {
+  setSession: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Homepage:React.FC<HomepageProps> = ({ setSession }) => {
 
   const [updatePost, setUpdatePost] = useState<boolean>(false)
 
@@ -28,7 +32,7 @@ function Homepage() {
         <div className='flex flex-row h-screen w-full overflow-hidden'>
           <PostAndSearch setUpdatePost={setUpdatePost} />
           <Feed updatePost={updatePost} />
-          <LogoutAndAccountContainer />
+          <LogoutAndAccountContainer setSession={setSession} />
         </div>
     </div>
   )

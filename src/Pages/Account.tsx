@@ -19,7 +19,11 @@ interface PostProps {
   imgUrl: string;
 }
 
-function Account() {
+interface LogoutProp {
+  setSession: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Account:React.FC<LogoutProp> = ({ setSession }) => {
 
   const [username, setUsername] = useState<string>('')
   const [email, setEmail] = useState<string>()
@@ -64,7 +68,7 @@ function Account() {
         <BackButton buttonText='Back to homepage' />
       </div>
       <div className='fixed top-10 right-10'>
-        <LogoutButton />
+        <LogoutButton setSession={setSession} />
       </div>
       <div className='flex flex-col gap-3 items-center p-3'>
         <h1 className='text-7xl'><VscAccount /></h1>

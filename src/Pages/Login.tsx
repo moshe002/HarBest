@@ -7,7 +7,11 @@ import ShowPasswordButton from '../Components/ShowPasswordButton'
 import PasswordChecker from '../Components/PasswordChecker';
 import InvalidUser from '../Components/InvalidUser';
 
-function Login() {
+interface LoginProps {
+  setSession: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Login:React.FC<LoginProps> = ({ setSession }) => {
 
   const navigate = useNavigate();
 
@@ -68,8 +72,9 @@ function Login() {
     }
     //console.log('form submitted')
     if(checker){
+      setSession(true)
+      localStorage.setItem('isLoggedIn', 'true');
       navigate('/homepage')
-      window.location.reload()
     }
     setLoading(false)
   }
