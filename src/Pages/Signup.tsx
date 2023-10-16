@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useReducer } from 'react'
 import { supabase } from '../supabase-config'
+import { reducer, defaultState } from '../Reducer/LoginSignupReducer'
 
 import Header from '../Components/Header'
 import ShowPasswordButton from '../Components/ShowPasswordButton'
@@ -9,16 +10,14 @@ import PasswordChecker from '../Components/PasswordChecker'
 
 function Signup() {
 
+  const [state, dispatch] = useReducer(reducer, defaultState)  
+
   const [showPass, setShowPass] = useState<boolean>(false)
   const [userName, setUserName] = useState<string>('')
   const [userEmail, setUserEmail] = useState<string>('')
   const [userPassword, setUserPassword] = useState<string>('')
-  const [changeType, setChangeType] = useState<string>('password')
   const [checker, setChecker] = useState<boolean>(false)
   const [userSignedIn, setUserSignedIn] = useState<boolean>(false)
-  const [passwordText, setPasswordText] = useState<string>('Password must be equal to or greater than 6 characters.')
-  const [passwordChecker, setPasswordChecker] = useState<boolean>(false)
-  const [passwordColor, setPasswordColor] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
 
   const handleSubmit = async (e:React.FormEvent) => {
@@ -51,12 +50,12 @@ function Signup() {
     setUserPassword(pass)
     inputText.length == 0 ? setShowPass(false) : setShowPass(true)
     if(inputText.length < 6) {
-      setPasswordChecker(true)
-      setPasswordText('Password too short!')
-      setPasswordColor('text-red-500')
+      dispatch({ type: 'password_checker', passwordChecker: true })
+      dispatch({ type: 'change_password_text', passwordText: 'Password too short!' })
+      dispatch({ type: 'change_text_color', changeColor: 'text-red-500' })
     } else {
-      setPasswordText('Password length is good.')
-      setPasswordColor('text-green-500')
+      dispatch({ type: 'change_password_text', passwordText: 'Password length is good.' })
+      dispatch({ type: 'change_text_color', changeColor: 'text-green-500' })
     }
   }
 
@@ -97,23 +96,24 @@ function Signup() {
                 name='password'
                 id='password'
                 title='password' 
-                type={changeType} 
+                type={state.inputType} 
                 onChange={e => handleChangeInput(e.target.value)}
                 required />
-                { passwordChecker 
+                { 
+                  state.passwordChecker
                   && 
                   <PasswordChecker 
-                    passwordText={passwordText}
-                    passwordColor={passwordColor} /> 
+                    passwordText={state.passwordText}
+                    textColor={state.changeColor} /> 
                 } 
                 { 
                   showPass 
                   && 
                   <ShowPasswordButton 
                     checker={checker}
-                    changeType={changeType}
                     setChecker={setChecker}
-                    setChangeType={setChangeType} />
+                    dispatch={dispatch}
+                    type={state.inputType} />
                 }
             </div>
             { loading && <h1 className='font-bold text-center text-blue-500 text-xl animate-bounce'>Loading...</h1> }

@@ -1,20 +1,20 @@
-import React from 'react'
+import React, { Dispatch } from 'react'
 
 import { AiOutlineEyeInvisible } from 'react-icons/ai'
 import { AiOutlineEye } from 'react-icons/ai'
 
 interface ShowPasswordProps {
     checker: boolean;
-    changeType: string;
+    type: string;
     setChecker: React.Dispatch<React.SetStateAction<boolean>>;
-    setChangeType: React.Dispatch<React.SetStateAction<string>>;
+    dispatch: Dispatch<{ type: string, inputType: string }>;
 }
 
 const ShowPasswordButton:React.FC<ShowPasswordProps> = ({ 
     checker, 
-    changeType,
+    type,
     setChecker, 
-    setChangeType 
+    dispatch 
 }) => {
 
   return (
@@ -25,14 +25,14 @@ const ShowPasswordButton:React.FC<ShowPasswordProps> = ({
             title='show password'
             onClick={() => {
             if(checker == false) {
-                setChangeType('text')
+                dispatch({ type: 'changed_type', inputType: 'password' })
                 setChecker(true)
             } else {
-                setChangeType('password')
+                dispatch({ type: 'changed_type', inputType: 'text' })
                 setChecker(false)
             }
             }}>
-            { changeType == 'text' ? <AiOutlineEyeInvisible /> : <AiOutlineEye />  }
+            { type === 'text' ? <AiOutlineEyeInvisible /> : <AiOutlineEye />  }
         </button> 
     </>
   )

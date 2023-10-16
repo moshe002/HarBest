@@ -2,13 +2,13 @@ import React from 'react'
 
 interface PasswordProps {
     passwordText: string;
-    passwordColor: string;
+    textColor: string;
 }
 
-const PasswordChecker:React.FC<PasswordProps> = ({ passwordText, passwordColor }) => {
+const PasswordChecker:React.FC<PasswordProps> = ({ passwordText, textColor }) => {
   return (
     <>
-        <p className={`text-xs ${passwordColor}`}>
+        <p className={`text-xs ${textColor}`}>
             {passwordText}
         </p>
     </>

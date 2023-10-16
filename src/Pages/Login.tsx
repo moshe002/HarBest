@@ -1,6 +1,7 @@
-import React, { useState } from 'react' // useEffect
+import React, { useState, useReducer } from 'react' // useEffect
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from '../supabase-config';
+import { reducer, defaultState } from '../Reducer/LoginSignupReducer';
 
 import Header from '../Components/Header';
 import ShowPasswordButton from '../Components/ShowPasswordButton'
@@ -15,41 +16,27 @@ const Login:React.FC<LoginProps> = ({ setSession }) => {
 
   const navigate = useNavigate();
 
+  const [state, dispatch] = useReducer(reducer, defaultState)
+
   const [showPass, setShowPass] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
-  const [changeType, setChangeType] = useState<string>('password')
   const [checker, setChecker] = useState<boolean>(false)
-  const [passwordText, setPasswordText] = useState<string>('Password must be equal to or greater than 6 characters.')
-  const [passwordChecker, setPasswordChecker] = useState<boolean>(false)
-  const [passwordColor, setPasswordColor] = useState<string>('')
   const [checkUser, setCheckUser] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
-
-  // useEffect(() => {
-  //   getSession()
-  // }, [])
-
-  // const getSession = async () => {
-  //   const { data, error } = await supabase.auth.getSession()  
-  //   if(data) {
-  //     console.log(data)
-  //   }
-  //   error && console.error(error)
-  // }
 
   const handleChangeInput = (pass:string) => {
     let inputText = pass
     setPassword(pass)
     inputText.length == 0 ? setShowPass(false) : setShowPass(true)
     if(inputText.length < 6) {
-      setPasswordChecker(true)
-      setPasswordText('Password too short!')
-      setPasswordColor('text-red-500')
+      dispatch({ type: 'password_checker', passwordChecker: true })
+      dispatch({ type: 'change_password_text', passwordText: 'Password too short!' })
+      dispatch({ type: 'change_text_color', changeColor: 'text-red-500' })
       setCheckUser(false)
     } else {
-      setPasswordText('Password length is good.')
-      setPasswordColor('text-green-500')
+      dispatch({ type: 'change_password_text', passwordText: 'Password length is good.' })
+      dispatch({ type: 'change_text_color', changeColor: 'text-green-500' })
     }
   }
 
@@ -104,26 +91,26 @@ const Login:React.FC<LoginProps> = ({ setSession }) => {
                       name='password' 
                       id='password'
                       title='password' 
-                      type={changeType} 
+                      type={state.inputType} 
                       onChange={e => handleChangeInput(e.target.value)}
                       //maxLength={8}
                       //minLength={8}
                       required />
                     {
-                      passwordChecker
+                      state.passwordChecker
                       &&
                       <PasswordChecker 
-                        passwordText={passwordText}
-                        passwordColor={passwordColor} />
+                        passwordText={state.passwordText}
+                        textColor={state.changeColor} />
                     }
                     { 
                       showPass 
                       && 
                       <ShowPasswordButton 
                         checker={checker}
-                        changeType={changeType}
                         setChecker={setChecker}
-                        setChangeType={setChangeType} />
+                        type={state.inputType}
+                        dispatch={dispatch} />
                     }
               </div>
               { loading && <h1 className='font-bold text-center text-gray-500 text-xl animate-bounce'>Loading...</h1> }
